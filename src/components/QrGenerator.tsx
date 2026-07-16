@@ -1,6 +1,6 @@
 import React from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { SessionDetails } from "../types";
+import type { SessionDetails } from "../types";
 
 interface QrGeneratorProps {
   session: SessionDetails;

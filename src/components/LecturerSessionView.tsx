@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { SessionDetails, AttendanceRecord, TokenInfo } from "../types";
+import type { SessionDetails, AttendanceRecord, TokenInfo } from "../types";
 import { QrGenerator } from "./QrGenerator";
 import { CheckInRoster } from "./CheckInRoster";
 
@@ -32,9 +32,8 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
 
   // Refs for tracking async states in timers
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const rosterIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const simulatedCheckInRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<any>(null);
+  const rosterIntervalRef = useRef<any>(null);
 
   const API_BASE_URL = "https://attendance-system-backend-b6ti.onrender.com/api/v1";
 

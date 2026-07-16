@@ -397,6 +397,16 @@ export const StudentPortal: React.FC = () => {
                   <p className="text-xs text-slate-400">Activating camera lense...</p>
                 </div>
               )}
+
+              {scannerError && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/95 p-4 text-center z-10 animate-fadeIn">
+                  <svg className="w-10 h-10 text-rose-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p className="text-xs font-bold text-rose-400">Camera Access Blocked</p>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{scannerError}</p>
+                </div>
+              )}
               
               {/* Target bounding container for html5-qrcode */}
               <div id="qr-reader" className="w-full h-full rounded-2xl overflow-hidden" />

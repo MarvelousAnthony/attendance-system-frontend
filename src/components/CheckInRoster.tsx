@@ -1,5 +1,5 @@
 import React from "react";
-import { AttendanceRecord } from "../types";
+import type { AttendanceRecord } from "../types";
 
 interface CheckInRosterProps {
   records: AttendanceRecord[];
@@ -114,7 +114,7 @@ export const CheckInRoster: React.FC<CheckInRosterProps> = ({
 
         {records.length > 0 && (
           <div className="space-y-3 pr-2">
-            {records.map((student, idx) => (
+            {records.map((student) => (
               <div
                 key={student.id}
                 className="flex items-center justify-between p-4 bg-slate-950/40 border border-slate-900 rounded-2xl hover:border-slate-800 transition-all duration-300 animate-fadeIn"
