@@ -229,7 +229,7 @@ export const StudentPortal: React.FC = () => {
 
       // Step C: POST check-in data to API endpoint
       setSubmissionStep("Submitting verification to university server...");
-      const response = await fetch("/api/v1/attendance/submit", {
+      const response = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/attendance/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

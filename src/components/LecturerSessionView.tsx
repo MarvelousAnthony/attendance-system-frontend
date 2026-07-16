@@ -36,7 +36,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   const rosterIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const simulatedCheckInRef = useRef<NodeJS.Timeout | null>(null);
 
-  const API_BASE_URL = "/api/v1";
+  const API_BASE_URL = "https://attendance-system-backend-b6ti.onrender.com/api/v1";
 
   // --- API LOGIC IMPLEMENTATION ---
 
