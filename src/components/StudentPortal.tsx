@@ -20,13 +20,9 @@ interface RecentCheckIn {
 
 export const StudentPortal: React.FC = () => {
   // --- MOCK USER PROFILE DATA ---
-  const [profile] = useState<StudentProfile>({
-    name: "David Kim",
-    email: "d.kim@university.edu",
-    studentId: "std-1004",
-    attendancePercentage: 91.3,
-    attendedSessions: 21,
-    totalSessions: 23,
+  const [profile, setProfile] = useState<StudentProfile | null>(() => {
+    const saved = localStorage.getItem("student_profile");
+    return saved ? JSON.parse(saved) : null;
   });
 
   const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([
@@ -276,6 +272,17 @@ export const StudentPortal: React.FC = () => {
   };
 
   // --- RENDERING ROUTINES ---
+ 
+  if (!profile) {
+    return (
+      <StudentOnboarding
+        onComplete={(newProfile) => {
+          localStorage.setItem("student_profile", JSON.stringify(newProfile));
+          setProfile(newProfile);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-start p-4 md:p-6 font-sans">
@@ -483,6 +490,260 @@ export const StudentPortal: React.FC = () => {
           </section>
         )}
         
+      </div>
+    </div>
+  );
+};
+
+interface StudentOnboardingProps {
+  onComplete: (profile: StudentProfile) => void;
+}
+
+const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => {
+  const [step, setStep] = useState<"details" | "academic" | "face" | "ready">("details");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [department, setDepartment] = useState("Computer Engineering");
+  const [customDepartment, setCustomDepartment] = useState("");
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+
+  const departments = [
+    "Computer Engineering",
+    "Computer Science",
+    "Electrical Engineering",
+    "Mechanical Engineering",
+    "Civil Engineering",
+    "Biochemistry",
+    "Microbiology",
+    "Business Administration",
+    "Accounting",
+    "Economics",
+    "Other"
+  ];
+
+  const handleNext = () => {
+    if (step === "details") {
+      if (!name || !email || !studentId) {
+        alert("Please fill in all fields.");
+        return;
+      }
+      setStep("academic");
+    } else if (step === "academic") {
+      setStep("face");
+    }
+  };
+
+  const startFaceScan = () => {
+    setIsScanning(true);
+    setScanProgress(0);
+    const interval = setInterval(() => {
+      setScanProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setIsScanning(false);
+          setStep("ready");
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 200);
+  };
+
+  const handleFinish = () => {
+    const finalDept = department === "Other" ? customDepartment : department;
+    onComplete({
+      name,
+      email,
+      studentId,
+      attendancePercentage: 100,
+      attendedSessions: 0,
+      totalSessions: 0,
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6 font-sans">
+      <div className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+        
+        {/* Header */}
+        <div className="text-center space-y-1.5">
+          <h2 className="text-2xl font-extrabold text-white tracking-tight">Student Registration</h2>
+          <p className="text-xs text-slate-400">Onboard your profile to register attendance school-wide</p>
+        </div>
+
+        {/* Step Indicator */}
+        <div className="flex items-center justify-between px-4">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "details" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400"}`}>1</div>
+          <div className="flex-1 h-0.5 bg-slate-800 mx-2" />
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "academic" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400"}`}>2</div>
+          <div className="flex-1 h-0.5 bg-slate-800 mx-2" />
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "face" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400"}`}>3</div>
+          <div className="flex-1 h-0.5 bg-slate-800 mx-2" />
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "ready" ? "bg-emerald-600 text-white" : "bg-slate-800 text-slate-400"}`}>✓</div>
+        </div>
+
+        {/* Step 1: Personal Details */}
+        {step === "details" && (
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name</label>
+              <input
+                type="text"
+                placeholder="e.g. David Kim"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Matric / Student ID</label>
+              <input
+                type="text"
+                placeholder="e.g. std-1004"
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all font-mono"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email Address</label>
+              <input
+                type="email"
+                placeholder="e.g. d.kim@university.edu"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+              />
+            </div>
+            <button
+              onClick={handleNext}
+              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-98 cursor-pointer"
+            >
+              Continue
+            </button>
+          </div>
+        )}
+
+        {/* Step 2: Academic Details */}
+        {step === "academic" && (
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Department</label>
+              <select
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+              >
+                {departments.map((dept) => (
+                  <option key={dept} value={dept}>{dept}</option>
+                ))}
+              </select>
+            </div>
+
+            {department === "Other" && (
+              <div className="space-y-1.5 animate-slideDown">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Type Your Department</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Civil Engineering"
+                  value={customDepartment}
+                  onChange={(e) => setCustomDepartment(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                />
+              </div>
+            )}
+
+            <div className="flex space-x-3 pt-2">
+              <button
+                onClick={() => setStep("details")}
+                className="w-1/3 bg-slate-850 hover:bg-slate-800 text-slate-300 text-sm font-bold py-2.5 rounded-xl transition-all cursor-pointer"
+              >
+                Back
+              </button>
+              <button
+                onClick={handleNext}
+                className="w-2/3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-98 cursor-pointer"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Biometric Enrolment */}
+        {step === "face" && (
+          <div className="space-y-5 text-center">
+            <div className="space-y-1.5">
+              <h3 className="text-sm font-bold text-slate-200">Face Recognition Scan</h3>
+              <p className="text-[11px] text-slate-400">Map your facial profile for secure checking-in validation</p>
+            </div>
+
+            {/* Circular Camera Scan View */}
+            <div className="w-40 h-40 rounded-full border-2 border-dashed border-indigo-500/40 mx-auto flex items-center justify-center p-2 relative overflow-hidden bg-slate-950">
+              {isScanning ? (
+                <>
+                  <div className="absolute inset-0 bg-indigo-600/10 flex items-center justify-center">
+                    {/* Scanner horizontal sweep line */}
+                    <div className="absolute top-0 left-0 w-full h-0.5 bg-indigo-400 shadow-md shadow-indigo-400/50 animate-bounce" style={{ animationDuration: "2s" }} />
+                    <span className="text-xs font-mono font-bold text-indigo-400 animate-pulse">{scanProgress}%</span>
+                  </div>
+                </>
+              ) : (
+                <div className="text-slate-500 flex flex-col items-center space-y-1.5">
+                  <svg className="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Camera Ready</span>
+                </div>
+              )}
+            </div>
+
+            {isScanning ? (
+              <p className="text-[10px] text-indigo-400 animate-pulse">Extracting biometric features, hold still...</p>
+            ) : (
+              <button
+                onClick={startFaceScan}
+                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 cursor-pointer"
+              >
+                Scan Face
+              </button>
+            )}
+
+            <button
+              onClick={() => setStep("academic")}
+              disabled={isScanning}
+              className="text-xs font-semibold text-slate-500 hover:text-slate-300 disabled:opacity-50 cursor-pointer"
+            >
+              Go Back
+            </button>
+          </div>
+        )}
+
+        {/* Step 4: Ready */}
+        {step === "ready" && (
+          <div className="space-y-5 text-center">
+            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/5 animate-bounce">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-bold text-white">Registration Complete!</h3>
+              <p className="text-xs text-slate-400">Your profile details and facial signature has been successfully compiled and securely registered.</p>
+            </div>
+
+            <button
+              onClick={handleFinish}
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-600/20 active:scale-98 cursor-pointer"
+            >
+              Go to Dashboard
+            </button>
+          </div>
+        )}
+
       </div>
     </div>
   );
