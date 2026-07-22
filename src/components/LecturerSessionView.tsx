@@ -56,7 +56,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
         id: sessionId,
         courseId: "c1a2b3c4-d5e6-7f8a-9b0c-1d2e3f4a5b6c",
         course: {
-          code: "CS-402",
+          code: "CSE-402",
           title: "Distributed Systems & Cloud Computing",
         },
         startTime: new Date().toISOString(),
@@ -175,6 +175,11 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   // --- DEMO MODE ACTIVE SIMULATION ---
   useEffect(() => {
     if (!isDemoMode) return;
+
+    // Reset API errors when entering simulated demo mode
+    setSessionError(null);
+    setTokenError(null);
+    setRosterError(null);
 
     const mockNames = [
       "Sarah Jenkins", "Michael Chen", "Emily Rodriguez", "David Kim", 

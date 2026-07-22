@@ -9,7 +9,7 @@ export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewMode>("lecturer");
 
   // A default mock session ID for the demo/walkthrough
-  const mockSessionId = "s1a2b3c4-d5e6-7f8a-9b0c-1d2e3f4a5b6c";
+  const mockSessionId = "f1a2b3c4-d5e6-4f8a-9b0c-1d2e3f4a5b6c";
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col">

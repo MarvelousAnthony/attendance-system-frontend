@@ -32,21 +32,21 @@ export const StudentPortal: React.FC = () => {
   const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([
     {
       id: "hist-1",
-      courseCode: "CS-402",
+      courseCode: "CSE-402",
       courseTitle: "Distributed Systems & Cloud Computing",
       timestamp: "2026-07-14T09:05:12Z",
       status: "present",
     },
     {
       id: "hist-2",
-      courseCode: "CS-408",
+      courseCode: "CSE-408",
       courseTitle: "Artificial Intelligence & Robotics",
       timestamp: "2026-07-11T13:12:04Z",
       status: "late",
     },
     {
       id: "hist-3",
-      courseCode: "CS-402",
+      courseCode: "CSE-402",
       courseTitle: "Distributed Systems & Cloud Computing",
       timestamp: "2026-07-09T09:01:45Z",
       status: "present",
@@ -253,13 +253,13 @@ export const StudentPortal: React.FC = () => {
       setSuccessResult({
         status: responseData.status,
         timestamp: responseData.timestamp,
-        courseCode: "CS-402", // Presumed active session code
+        courseCode: "CSE-402", // Presumed active session code
       });
 
       // Update mock history list with new record
       const newHistoryItem: RecentCheckIn = {
         id: `hist-${Date.now()}`,
-        courseCode: "CS-402",
+        courseCode: "CSE-402",
         courseTitle: "Distributed Systems & Cloud Computing",
         timestamp: responseData.timestamp,
         status: responseData.status === "late" ? "late" : "present",
