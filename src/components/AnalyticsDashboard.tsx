@@ -199,7 +199,7 @@ export const AnalyticsDashboard: React.FC = () => {
           <div>
             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">At-Risk Students</span>
             <span className="text-4xl font-extrabold text-rose-500 mt-2 block">{kpis.atRiskCount}</span>
-            <span className="text-[10px] font-semibold text-slate-400 mt-1 block">Below the 75% critical limit</span>
+            <span className="text-[10px] font-semibold text-slate-400 mt-1 block">Below the 70% critical limit</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -631,7 +631,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
                   {/* Custom Grace Period (Present) */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <label className="font-bold text-slate-400">Grace Period (Early)</label>
+                      <label className="font-bold text-slate-400">Grace Period (Marked Present)</label>
                       <span className="font-bold font-mono text-indigo-400">{gracePeriod} mins</span>
                     </div>
                     <input
@@ -646,12 +646,13 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
                       }}
                       className="w-full accent-indigo-500 bg-slate-950 rounded-lg cursor-pointer h-1.5"
                     />
+                    <p className="text-[10px] text-slate-500 leading-relaxed">Students checking in within this limit are marked <b>Present</b>.</p>
                   </div>
 
                   {/* Custom Late Period */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <label className="font-bold text-slate-400">Late Period Threshold</label>
+                      <label className="font-bold text-slate-400">Lateness Cutoff (Marked Late)</label>
                       <span className="font-bold font-mono text-indigo-400">{latePeriod} mins</span>
                     </div>
                     <input
@@ -662,6 +663,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
                       onChange={(e) => setLatePeriod(parseInt(e.target.value))}
                       className="w-full accent-indigo-500 bg-slate-950 rounded-lg cursor-pointer h-1.5"
                     />
+                    <p className="text-[10px] text-slate-500 leading-relaxed">Students checking in after the grace period but within this limit are marked <b>Late</b>. Beyond this time, check-in closes completely.</p>
                   </div>
 
                   {/* Geofence boundary radius */}

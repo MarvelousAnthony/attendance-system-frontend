@@ -624,7 +624,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
               <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Matric / Student ID</label>
               <input
                 type="text"
-                placeholder="e.g. std-1004"
+                placeholder="e.g. 23/0987"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all font-mono"
