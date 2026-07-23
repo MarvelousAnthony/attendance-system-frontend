@@ -109,6 +109,7 @@ export const App: React.FC = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 flex items-center space-x-1.5 transition-all shadow-md shadow-black/10"
             >
+              <span>{theme === "dark" ? "☀️" : "🌙"}</span>
               <span>{theme === "dark" ? "Light Theme" : "Dark Theme"}</span>
             </button>
           </div>
@@ -212,7 +213,7 @@ export const App: React.FC = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
             >
-              {theme === "dark" ? "Light" : "Dark"}
+              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
             </button>
           </div>
 
@@ -378,7 +379,7 @@ export const App: React.FC = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
             >
-              {theme === "dark" ? "Light" : "Dark"}
+              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
             </button>
           </div>
 
@@ -454,7 +455,7 @@ export const App: React.FC = () => {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                {theme === "dark" ? "Light" : "Dark"}
+                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(true)}
@@ -473,7 +474,7 @@ export const App: React.FC = () => {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                {theme === "dark" ? "Light" : "Dark"}
+                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(true)}
@@ -492,7 +493,7 @@ export const App: React.FC = () => {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                {theme === "dark" ? "Light" : "Dark"}
+                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(true)}
