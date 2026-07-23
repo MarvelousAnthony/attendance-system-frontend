@@ -29,50 +29,67 @@
 }
 
 /* ==========================================================================
-   LIGHT THEME OVERRIDES (FOR PREMIUM DUAL-THEME BLENDING)
+   LIGHT THEME OVERRIDES (PREMIUM HYBRID LIGHT/DARK MODE SYSTEM)
    ========================================================================== */
 .light {
   background-color: #f8fafc !important; /* slate-50 */
   color: #0f172a !important; /* slate-900 */
 }
 
+/* Base Body/HTML Override */
+.light, 
+.light body,
 .light .bg-slate-950 {
   background-color: #f8fafc !important;
+  color: #0f172a !important;
 }
 
+/* Cards and Panels */
 .light .bg-slate-900,
-.light .bg-slate-900\/60 {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  backdrop-filter: blur(20px) !important;
-}
-
+.light .bg-slate-900\/60,
+.light .bg-slate-900\/40,
 .light .bg-slate-950\/40,
 .light .bg-indigo-950\/40 {
-  background-color: rgba(241, 245, 249, 0.9) !important;
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important; /* slate-300 */
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05) !important;
 }
 
+/* Borders */
 .light .border-slate-800,
 .light .border-slate-800\/80,
 .light .border-slate-850,
 .light .border-slate-900,
-.light .border-indigo-900\/30 {
-  border-color: #cbd5e1 !important; /* slate-300 */
+.light .border-indigo-900\/30,
+.light .border-indigo-500\/30,
+.light .divide-slate-800\/60 > *,
+.light .border-t.border-slate-850 {
+  border-color: #e2e8f0 !important; /* slate-200 */
 }
 
+/* Text Colors */
 .light .text-white,
 .light .text-slate-100,
-.light .text-slate-200 {
-  color: #0f172a !important;
+.light .text-slate-200,
+.light .text-slate-300,
+.light .text-slate-450 {
+  color: #1e293b !important; /* slate-800 */
 }
 
 .light .text-slate-400 {
-  color: #334155 !important; /* slate-700 */
-}
-
-.light .text-slate-500 {
   color: #475569 !important; /* slate-600 */
 }
 
+.light .text-slate-500 {
+  color: #64748b !important; /* slate-500 */
+}
+
+/* Typography Headings */
+.light h1, .light h2, .light h3, .light h4, .light h5 {
+  color: #0f172a !important; /* slate-900 */
+}
+
+/* Input elements */
 .light input,
 .light select,
 .light textarea {
@@ -85,42 +102,67 @@
   color: #94a3b8 !important;
 }
 
+/* Badge colors (inverting dark versions to high-contrast pastel) */
 .light .bg-emerald-500\/10 {
-  background-color: rgba(16, 185, 129, 0.15) !important;
-  color: #047857 !important; /* emerald-700 */
+  background-color: #d1fae5 !important; /* emerald-100 */
+  color: #065f46 !important; /* emerald-800 */
 }
 .light .bg-indigo-500\/10,
 .light .bg-indigo-500\/15 {
-  background-color: rgba(99, 102, 241, 0.15) !important;
-  color: #4338ca !important; /* indigo-700 */
+  background-color: #e0e7ff !important; /* indigo-100 */
+  color: #3730a3 !important; /* indigo-800 */
 }
 .light .bg-rose-500\/10,
 .light .bg-rose-500\/15 {
-  background-color: rgba(244, 63, 94, 0.15) !important;
-  color: #be123c !important; /* rose-700 */
+  background-color: #ffe4e6 !important; /* rose-100 */
+  color: #9f1239 !important; /* rose-800 */
 }
 .light .bg-amber-500\/10 {
-  background-color: rgba(245, 158, 11, 0.15) !important;
-  color: #b45309 !important; /* amber-700 */
+  background-color: #fef3c7 !important; /* amber-100 */
+  color: #92400e !important; /* amber-800 */
 }
+
+/* Hover effects */
+.light .hover\:bg-slate-900\/40:hover {
+  background-color: #f1f5f9 !important; /* slate-100 */
+}
+.light .hover\:bg-rose-950\/20:hover {
+  background-color: #fee2e2 !important; /* rose-100 */
+}
+.light .bg-rose-950\/10 {
+  background-color: #fef2f2 !important;
+}
+
+/* Recharts Tooltip */
+.light .recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Specific text color overrides */
 .light .text-indigo-300,
-.light .text-indigo-400 {
+.light .text-indigo-400,
+.light .text-indigo-500 {
   color: #4f46e5 !important; /* indigo-600 */
 }
+.light .text-rose-450,
 .light .text-rose-400,
 .light .text-rose-500 {
-  color: #e11d48 !important; /* rose-600 */
+  color: #dc2626 !important; /* rose-600 */
 }
-.light .text-emerald-400 {
+.light .text-emerald-400,
+.light .text-emerald-500 {
   color: #059669 !important; /* emerald-600 */
 }
-.light .text-slate-300 {
-  color: #1e293b !important; /* slate-800 */
+
+/* Fix Geofence marker colors */
+.light .text-slate-400.font-mono {
+  color: #475569 !important;
 }
-.light .text-\[10px\].text-slate-500 {
-  color: #64748b !important;
-}
-.light .divide-slate-800\/60 > * {
-  border-color: #cbd5e1 !important;
+
+/* Fix active switches/toggles */
+.light .bg-slate-950 input[type="range"] {
+  background-color: #e2e8f0 !important;
 }
 
