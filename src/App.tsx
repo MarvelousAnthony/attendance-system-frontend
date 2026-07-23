@@ -449,10 +449,14 @@ export const App: React.FC = () => {
                 {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
-                onClick={() => setCurrentView("landing")}
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to log out?")) {
+                    setCurrentView("landing");
+                  }
+                }}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                🚪 Exit Portal
+                🚪 Log Out
               </button>
             </div>
             <LecturerSessionView />
@@ -468,10 +472,14 @@ export const App: React.FC = () => {
                 {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
-                onClick={() => setCurrentView("landing")}
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to log out?")) {
+                    setCurrentView("landing");
+                  }
+                }}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                🚪 Exit Portal
+                🚪 Log Out
               </button>
             </div>
             <StudentPortal />
@@ -487,10 +495,14 @@ export const App: React.FC = () => {
                 {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
-                onClick={() => setCurrentView("landing")}
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to log out?")) {
+                    setCurrentView("landing");
+                  }
+                }}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                🚪 Exit Portal
+                🚪 Log Out
               </button>
             </div>
             <AnalyticsDashboard />
