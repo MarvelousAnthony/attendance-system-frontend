@@ -331,7 +331,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
           <div className="flex items-center space-x-3">
             {isDemoMode && (
               <span className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse">
-                ⚠️ Running in Demo Simulation Mode
+                Running in Demo Simulation Mode
               </span>
             )}
             
@@ -380,7 +380,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
                     onClick={handleOpenCheckout}
                     className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/20 active:scale-95 transition-all cursor-pointer text-center"
                   >
-                    🔓 Open Check-Out QR Scanner
+                    Open Check-Out QR Scanner
                   </button>
                 )}
               </div>
@@ -697,7 +697,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
                 <p className="text-xs text-indigo-400 animate-pulse text-center py-4">Connecting to Supabase Database...</p>
               )}
               {coursesError && (
-                <p className="text-xs text-amber-500 text-center py-2">⚠️ Offline Mode: Using Cached Courses</p>
+                <p className="text-xs text-amber-500 text-center py-2">Offline Mode: Using Cached Courses</p>
               )}
               {courses.map((course) => (
                 <div

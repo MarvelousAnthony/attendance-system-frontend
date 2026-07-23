@@ -383,7 +383,7 @@ export const StudentPortal: React.FC = () => {
                 {successResult.status === "incomplete" ? (
                   <>
                     Your check-in was successfully logged for <strong>{successResult.courseCode}</strong>.
-                    <span className="block mt-1 font-bold text-indigo-400">⚠️ Please scan again at the end of class to complete your check-out.</span>
+                    <span className="block mt-1 font-bold text-indigo-400">Please scan again at the end of class to complete your check-out.</span>
                   </>
                 ) : (
                   <>

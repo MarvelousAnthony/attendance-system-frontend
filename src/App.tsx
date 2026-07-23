@@ -109,7 +109,6 @@ export const App: React.FC = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 flex items-center space-x-1.5 transition-all shadow-md shadow-black/10"
             >
-              <span>{theme === "dark" ? "☀️" : "🌙"}</span>
               <span>{theme === "dark" ? "Light Theme" : "Dark Theme"}</span>
             </button>
           </div>
@@ -117,7 +116,7 @@ export const App: React.FC = () => {
           {/* Institution Branding */}
           <div className="text-center space-y-3">
             <div className="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/25 px-4 py-1.5 rounded-full text-indigo-400 text-xs font-bold tracking-widest uppercase">
-              🏫 Institutional Attendance Hub
+              Institutional Attendance Hub
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-none bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
               QR Attend & Verify
@@ -136,7 +135,10 @@ export const App: React.FC = () => {
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all">
-                  🎓
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479L12 21l-6.825-3.943a12.084 12.084 0 01.665-6.479L12 14z" />
+                  </svg>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-all">Student Attendance Hub</h3>
@@ -160,7 +162,9 @@ export const App: React.FC = () => {
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                  👨‍🏫
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-all">Lecturer Dashboard</h3>
@@ -181,7 +185,9 @@ export const App: React.FC = () => {
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-all">
-                  📊
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white group-hover:text-rose-400 transition-all">Admin Analytics</h3>
@@ -206,7 +212,7 @@ export const App: React.FC = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
             >
-              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+              {theme === "dark" ? "Light" : "Dark"}
             </button>
           </div>
 
@@ -372,7 +378,7 @@ export const App: React.FC = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
             >
-              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+              {theme === "dark" ? "Light" : "Dark"}
             </button>
           </div>
 
@@ -448,13 +454,13 @@ export const App: React.FC = () => {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+                {theme === "dark" ? "Light" : "Dark"}
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(true)}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                🚪 Log Out
+                Log Out
               </button>
             </div>
             <LecturerSessionView />
@@ -467,13 +473,13 @@ export const App: React.FC = () => {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+                {theme === "dark" ? "Light" : "Dark"}
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(true)}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                🚪 Log Out
+                Log Out
               </button>
             </div>
             <StudentPortal />
@@ -486,13 +492,13 @@ export const App: React.FC = () => {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+                {theme === "dark" ? "Light" : "Dark"}
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(true)}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
-                🚪 Log Out
+                Log Out
               </button>
             </div>
             <AnalyticsDashboard />
@@ -504,9 +510,6 @@ export const App: React.FC = () => {
       {showLogoutConfirm && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md animate-fadeIn">
           <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-sm w-full mx-4 shadow-2xl space-y-6 text-center animate-scaleIn">
-            <div className="w-14 h-14 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto text-rose-450 text-2xl">
-              🚪
-            </div>
             <div className="space-y-1.5">
               <h3 className="text-lg font-bold text-white">Log Out</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
