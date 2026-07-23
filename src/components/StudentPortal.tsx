@@ -183,8 +183,29 @@ export const StudentPortal: React.FC = () => {
           () => {} // Mute error logs during continuous video scanning
         );
       } catch (err: any) {
-        setScannerError(err.message || "Failed to initialize camera feedback.");
-        setShowScanner(false);
+        console.warn("Rear camera not found or blocked. Retrying with front camera/default webcam...", err);
+        try {
+          // Fallback: Retry using front-facing camera (optimal for laptop testing)
+          await html5QrCode.start(
+            { facingMode: "user" },
+            {
+              fps: 10,
+              qrbox: (width, height) => {
+                const boxSize = Math.min(width, height) * 0.7;
+                return { width: boxSize, height: boxSize };
+              },
+            },
+            async (decodedText) => {
+              await handleSuccessfulScan(decodedText);
+            },
+            () => {}
+          );
+        } catch (innerErr: any) {
+          setScannerError(
+            "Camera initialization failed. Please ensure camera permissions are allowed in your browser address bar and that no other application is using your camera."
+          );
+          setShowScanner(false);
+        }
       } finally {
         setIsCameraLoading(false);
       }
