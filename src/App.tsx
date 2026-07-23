@@ -108,7 +108,7 @@ export const App: React.FC = () => {
           {/* Institution Branding */}
           <div className="text-center space-y-3">
             <div className="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/25 px-4 py-1.5 rounded-full text-indigo-400 text-xs font-bold tracking-widest uppercase">
-              🏫 Institutional Attendance Portal
+              🏫 Institutional Attendance Hub
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-none bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
               QR Attend & Verify
@@ -349,7 +349,7 @@ export const App: React.FC = () => {
               onClick={() => setCurrentView("landing")}
               className="w-full text-center text-xs text-slate-500 hover:text-slate-300 font-semibold cursor-pointer"
             >
-              &larr; Back to Portal Hub
+              &larr; Back to Hub Home
             </button>
           </div>
         </div>
@@ -424,7 +424,7 @@ export const App: React.FC = () => {
               onClick={() => setCurrentView("landing")}
               className="w-full text-center text-xs text-slate-500 hover:text-slate-300 font-semibold cursor-pointer"
             >
-              &larr; Back to Portal Hub
+              &larr; Back to Hub Home
             </button>
           </div>
         </div>
