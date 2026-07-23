@@ -5,6 +5,7 @@ interface StudentProfile {
   name: string;
   email: string;
   studentId: string;
+  department?: string;
   attendancePercentage: number;
   attendedSessions: number;
   totalSessions: number;
@@ -206,6 +207,7 @@ export const StudentPortal: React.FC = () => {
 
   // 4. Processing QR Code Data + Location + Fingerprint
   const handleSuccessfulScan = async (scannedToken: string) => {
+    if (!profile) return;
     // Hide scanner view once token is captured
     setShowScanner(false);
     cleanupScanner();
@@ -557,6 +559,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
       name,
       email,
       studentId,
+      department: finalDept,
       attendancePercentage: 100,
       attendedSessions: 0,
       totalSessions: 0,
