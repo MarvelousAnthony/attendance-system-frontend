@@ -27,3 +27,100 @@
     }
   }
 }
+
+/* ==========================================================================
+   LIGHT THEME OVERRIDES (FOR PREMIUM DUAL-THEME BLENDING)
+   ========================================================================== */
+.light {
+  background-color: #f8fafc !important; /* slate-50 */
+  color: #0f172a !important; /* slate-900 */
+}
+
+.light .bg-slate-950 {
+  background-color: #f8fafc !important;
+}
+
+.light .bg-slate-900,
+.light .bg-slate-900\/60 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.light .bg-slate-950\/40,
+.light .bg-indigo-950\/40 {
+  background-color: rgba(241, 245, 249, 0.9) !important;
+}
+
+.light .border-slate-800,
+.light .border-slate-800\/80,
+.light .border-slate-850,
+.light .border-slate-900,
+.light .border-indigo-900\/30 {
+  border-color: #cbd5e1 !important; /* slate-300 */
+}
+
+.light .text-white,
+.light .text-slate-100,
+.light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+.light .text-slate-400 {
+  color: #334155 !important; /* slate-700 */
+}
+
+.light .text-slate-500 {
+  color: #475569 !important; /* slate-600 */
+}
+
+.light input,
+.light select,
+.light textarea {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.light input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.light .bg-emerald-500\/10 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #047857 !important; /* emerald-700 */
+}
+.light .bg-indigo-500\/10,
+.light .bg-indigo-500\/15 {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+  color: #4338ca !important; /* indigo-700 */
+}
+.light .bg-rose-500\/10,
+.light .bg-rose-500\/15 {
+  background-color: rgba(244, 63, 94, 0.15) !important;
+  color: #be123c !important; /* rose-700 */
+}
+.light .bg-amber-500\/10 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  color: #b45309 !important; /* amber-700 */
+}
+.light .text-indigo-300,
+.light .text-indigo-400 {
+  color: #4f46e5 !important; /* indigo-600 */
+}
+.light .text-rose-400,
+.light .text-rose-500 {
+  color: #e11d48 !important; /* rose-600 */
+}
+.light .text-emerald-400 {
+  color: #059669 !important; /* emerald-600 */
+}
+.light .text-slate-300 {
+  color: #1e293b !important; /* slate-800 */
+}
+.light .text-\[10px\].text-slate-500 {
+  color: #64748b !important;
+}
+.light .divide-slate-800\/60 > * {
+  border-color: #cbd5e1 !important;
+}
+
