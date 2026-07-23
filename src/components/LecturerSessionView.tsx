@@ -363,13 +363,39 @@ interface LecturerDashboardProps {
 }
 
 const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }) => {
-  const [courses, setCourses] = useState<CourseItem[]>([
-    { id: "c-1", code: "CSE-402", title: "Distributed Systems & Cloud Computing", department: "Computer Engineering" },
-    { id: "c-2", code: "CSE-408", title: "Artificial Intelligence & Robotics", department: "Computer Engineering" },
-    { id: "c-3", code: "CSE-301", title: "Database Management Systems", department: "Computer Science" }
-  ]);
-
+  const [courses, setCourses] = useState<CourseItem[]>([]);
+  const [isLoadingCourses, setIsLoadingCourses] = useState(false);
+  const [coursesError, setCoursesError] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseItem | null>(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setIsLoadingCourses(true);
+      setCoursesError(null);
+      try {
+        const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/courses");
+        if (!res.ok) throw new Error("Failed to load courses from database.");
+        const data = await res.json();
+        setCourses(data);
+        if (data.length > 0) {
+          setSelectedCourse(data[0]);
+        }
+      } catch (err: any) {
+        console.error(err);
+        setCoursesError(err.message || "Failed to load courses.");
+        const fallback = [
+          { id: "c-1", code: "CSE-402", title: "Distributed Systems & Cloud Computing", department: "Computer Engineering" },
+          { id: "c-2", code: "CSE-408", title: "Artificial Intelligence & Robotics", department: "Computer Engineering" },
+          { id: "c-3", code: "CSE-301", title: "Database Management Systems", department: "Computer Science" }
+        ];
+        setCourses(fallback);
+        setSelectedCourse(fallback[0]);
+      } finally {
+        setIsLoadingCourses(false);
+      }
+    };
+    fetchCourses();
+  }, []);
   const [showAddCourse, setShowAddCourse] = useState(false);
   const [newCode, setNewCode] = useState("");
   const [newTitle, setNewTitle] = useState("");
@@ -420,25 +446,53 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
     }
   }, [selectedCourse]);
 
-  const handleAddCourse = (e: React.FormEvent) => {
+  const handleAddCourse = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCode || !newTitle) {
       alert("Please fill in course code and title.");
       return;
     }
     const deptVal = newDept === "Other" ? customDept : newDept;
-    const item: CourseItem = {
-      id: `c-${Date.now()}`,
-      code: newCode,
-      title: newTitle,
-      department: deptVal || "General Studies",
-    };
-    setCourses((prev) => [...prev, item]);
-    setShowAddCourse(false);
-    setNewCode("");
-    setNewTitle("");
-    setNewDept("Computer Engineering");
-    setCustomDept("");
+    
+    try {
+      const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          course_code: newCode,
+          course_title: newTitle,
+          department: deptVal,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to register course.");
+      
+      const item: CourseItem = {
+        id: data.id,
+        code: data.code,
+        title: data.title,
+        department: data.department,
+      };
+      setCourses([...courses, item]);
+      setSelectedCourse(item);
+    } catch (err: any) {
+      console.warn("Adding course offline fallback.", err);
+      // Fallback local mock course
+      const item: CourseItem = {
+        id: `c-${Date.now()}`,
+        code: newCode,
+        title: newTitle,
+        department: deptVal,
+      };
+      setCourses([...courses, item]);
+      setSelectedCourse(item);
+    } finally {
+      setShowAddCourse(false);
+      setNewCode("");
+      setNewTitle("");
+      setNewDept("Computer Engineering");
+      setCustomDept("");
+    }
   };
 
   const handleLaunch = async (demo: boolean) => {
@@ -471,7 +525,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          course_id: "c1a2b3c4-d5e6-7f8a-9b0c-1d2e3f4a5b6c", // Standard seeded course ID to avoid foreign key errors
+          course_id: selectedCourse.id, // Dynamic course ID from DB
           start_time: newSession.startTime,
           end_time: newSession.endTime,
           latitude: newSession.latitude,
@@ -580,6 +634,12 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
             </form>
           ) : (
             <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+              {isLoadingCourses && (
+                <p className="text-xs text-indigo-400 animate-pulse text-center py-4">Connecting to Supabase Database...</p>
+              )}
+              {coursesError && (
+                <p className="text-xs text-amber-500 text-center py-2">⚠️ Offline Mode: Using Cached Courses</p>
+              )}
               {courses.map((course) => (
                 <div
                   key={course.id}

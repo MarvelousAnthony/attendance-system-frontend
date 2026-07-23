@@ -5,6 +5,7 @@ interface StudentProfile {
   name: string;
   email: string;
   studentId: string;
+  dbId: string;
   department?: string;
   attendancePercentage: number;
   attendedSessions: number;
@@ -255,7 +256,7 @@ export const StudentPortal: React.FC = () => {
         },
         body: JSON.stringify({
           token: scannedToken,
-          student_id: profile.studentId,
+          student_id: profile.dbId,
           student_latitude: coords.latitude,
           student_longitude: coords.longitude,
           device_hash: deviceHash,
@@ -627,6 +628,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
         name,
         email,
         studentId,
+        dbId: data.id,
         department: finalDept,
         attendancePercentage: 100,
         attendedSessions: 0,
