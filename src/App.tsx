@@ -25,6 +25,8 @@ export const App: React.FC = () => {
   const [showLecturerPwd, setShowLecturerPwd] = useState(false);
   const [showRegisterPwd, setShowRegisterPwd] = useState(false);
   const [showAdminPwd, setShowAdminPwd] = useState(false);
+  
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // Sync theme changes to the HTML element to support global browser background styles
   useEffect(() => {
@@ -449,11 +451,7 @@ export const App: React.FC = () => {
                 {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
-                onClick={() => {
-                  if (window.confirm("Are you sure you want to log out?")) {
-                    setCurrentView("landing");
-                  }
-                }}
+                onClick={() => setShowLogoutConfirm(true)}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
                 🚪 Log Out
@@ -472,11 +470,7 @@ export const App: React.FC = () => {
                 {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
-                onClick={() => {
-                  if (window.confirm("Are you sure you want to log out?")) {
-                    setCurrentView("landing");
-                  }
-                }}
+                onClick={() => setShowLogoutConfirm(true)}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
                 🚪 Log Out
@@ -495,11 +489,7 @@ export const App: React.FC = () => {
                 {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
               </button>
               <button
-                onClick={() => {
-                  if (window.confirm("Are you sure you want to log out?")) {
-                    setCurrentView("landing");
-                  }
-                }}
+                onClick={() => setShowLogoutConfirm(true)}
                 className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
                 🚪 Log Out
@@ -509,6 +499,40 @@ export const App: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Premium Custom Log Out Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+          <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-sm w-full mx-4 shadow-2xl space-y-6 text-center animate-scaleIn">
+            <div className="w-14 h-14 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto text-rose-450 text-2xl">
+              🚪
+            </div>
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-bold text-white">Log Out</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Are you sure you want to log out of your current session?
+              </p>
+            </div>
+            <div className="flex items-center justify-center space-x-3">
+              <button
+                onClick={() => {
+                  setShowLogoutConfirm(false);
+                  setCurrentView("landing");
+                }}
+                className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-lg shadow-rose-600/25 active:scale-98"
+              >
+                Yes, Log Out
+              </button>
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl text-xs font-bold cursor-pointer transition-all border border-slate-750 hover:text-white"
+              >
+                No, Stay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
