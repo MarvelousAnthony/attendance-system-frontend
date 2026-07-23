@@ -282,7 +282,7 @@ export const StudentPortal: React.FC = () => {
         courseCode: "CSE-402",
         courseTitle: "Distributed Systems & Cloud Computing",
         timestamp: responseData.timestamp,
-        status: responseData.status === "late" ? "late" : "present",
+        status: responseData.status,
       };
       setRecentHistory((prev) => [newHistoryItem, ...prev]);
 
@@ -376,10 +376,21 @@ export const StudentPortal: React.FC = () => {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-emerald-400">Check-In Successful</p>
+              <p className="text-sm font-bold text-emerald-400">
+                {successResult.status === "incomplete" ? "Check-In Registered" : "Attendance Verified"}
+              </p>
               <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Your presence was verified for <strong>{successResult.courseCode}</strong>. Status:{" "}
-                <span className="capitalize font-semibold text-emerald-300">{successResult.status}</span>.
+                {successResult.status === "incomplete" ? (
+                  <>
+                    Your check-in was successfully logged for <strong>{successResult.courseCode}</strong>.
+                    <span className="block mt-1 font-bold text-indigo-400">⚠️ Please scan again at the end of class to complete your check-out.</span>
+                  </>
+                ) : (
+                  <>
+                    Your presence was verified for <strong>{successResult.courseCode}</strong>. Status:{" "}
+                    <span className="capitalize font-semibold text-emerald-300">{successResult.status}</span>.
+                  </>
+                )}
               </p>
               <p className="text-[10px] font-mono text-slate-500 mt-1.5">
                 Saved: {new Date(successResult.timestamp).toLocaleString()}

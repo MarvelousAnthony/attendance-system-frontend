@@ -12,9 +12,11 @@ export interface SessionDetails {
   latitude: number;
   longitude: number;
   allowedRadiusMeters: number;
+  requireDoubleSigning?: boolean;
+  isCheckoutOpen?: boolean;
 }
 
-export type AttendanceStatus = 'present' | 'late' | 'absent';
+export type AttendanceStatus = 'present' | 'late' | 'absent' | 'incomplete';
 
 export interface AttendanceRecord {
   id: string;

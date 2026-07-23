@@ -127,6 +127,33 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
     }
   }, [session, isDemoMode]);
 
+  const handleOpenCheckout = async () => {
+    if (!session) return;
+    if (isDemoMode) {
+      setSession({
+        ...session,
+        isCheckoutOpen: true,
+      });
+      alert("Check-Out QR is now active in simulation mode!");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE_URL}/sessions/${session.id}/checkout/open`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      if (res.ok) {
+        await res.json();
+        setSession((prev) => prev ? { ...prev, isCheckoutOpen: true } : null);
+        alert("Check-Out QR is now active! Students can scan to check out.");
+      } else {
+        alert("Failed to open check-out scanning.");
+      }
+    } catch (err) {
+      alert("Error opening check-out scanner.");
+    }
+  };
+
   // --- EFFECT SYNCHRONIZATION ---
 
   // Initial load
@@ -323,7 +350,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* LEFT: QR Code Controller */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-5 space-y-6">
             <QrGenerator
               session={session}
               token={token}
@@ -332,6 +359,32 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
               tokenError={tokenError}
               onRefresh={fetchToken}
             />
+
+            {/* Check-Out Control Block (If session requires double signing) */}
+            {session && session.requireDoubleSigning && (
+              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-4">
+                <div>
+                  <h3 className="text-sm font-bold text-white">Double Signing Controls</h3>
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    This class session requires students to perform a check-out scan. Open check-out scanning towards the end of the class.
+                  </p>
+                </div>
+
+                {session.isCheckoutOpen ? (
+                  <div className="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/25 px-4 py-3 rounded-2xl text-emerald-400 text-xs font-bold justify-center">
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
+                    <span>Check-Out QR Scanner Active</span>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleOpenCheckout}
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/20 active:scale-95 transition-all cursor-pointer text-center"
+                  >
+                    🔓 Open Check-Out QR Scanner
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* RIGHT: Live Roster View */}
@@ -406,6 +459,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
   const [radius, setRadius] = useState(50);
   const [gracePeriod, setGracePeriod] = useState(10);
   const [latePeriod, setLatePeriod] = useState(30);
+  const [requireDoubleSigning, setRequireDoubleSigning] = useState(false);
 
   // GPS Coordinates
   const [gps, setGps] = useState<{ lat: number; lng: number } | null>(null);
@@ -512,6 +566,8 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
       latitude: gps?.lat || 6.5244,
       longitude: gps?.lng || 3.3792,
       allowedRadiusMeters: radius,
+      requireDoubleSigning: requireDoubleSigning,
+      isCheckoutOpen: false,
     };
 
     if (demo) {
@@ -533,6 +589,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
           allowed_radius_meters: radius,
           grace_period_minutes: gracePeriod,
           late_period_minutes: latePeriod,
+          require_double_signing: requireDoubleSigning,
         }),
       });
       if (res.ok) {
@@ -542,6 +599,8 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
           ...newSession,
           id: data.id,
           courseId: data.courseId || newSession.courseId,
+          requireDoubleSigning: data.require_double_signing,
+          isCheckoutOpen: data.is_checkout_open,
         };
         onLaunchSession(liveSession, false);
       } else {
@@ -765,6 +824,23 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
                         </div>
                       )}
                     </div>
+                  </div>
+
+                  {/* Require Check-Out Toggle */}
+                  <div className="bg-slate-950/60 border border-slate-850 rounded-2xl p-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-slate-300">Require Check-Out</p>
+                      <p className="text-[10px] text-slate-500 mt-0.5">Students must scan again at the end of class.</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={requireDoubleSigning}
+                        onChange={(e) => setRequireDoubleSigning(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 peer-checked:after:bg-white"></div>
+                    </label>
                   </div>
                 </div>
               </div>
