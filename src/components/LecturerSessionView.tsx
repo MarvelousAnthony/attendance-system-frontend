@@ -563,7 +563,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-xl font-extrabold text-white tracking-tight">Dr. Elizabeth Vance</h2>
-              <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider font-mono">Lecturer Console</p>
+              <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider font-mono">Lecturer Dashboard</p>
             </div>
             <button
               onClick={() => setShowAddCourse(!showAddCourse)}

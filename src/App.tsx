@@ -125,14 +125,14 @@ export const App: React.FC = () => {
                   🎓
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-all">Student Portal</h3>
+                  <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-all">Student Attendance Hub</h3>
                   <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                     Scan dynamic session QR codes, register face ID biometric profiles, and view your real-time attendance logs.
                   </p>
                 </div>
               </div>
               <div className="mt-6 flex items-center text-xs font-bold text-indigo-400 group-hover:text-indigo-300">
-                Enter Portal &rarr;
+                Enter Hub &rarr;
               </div>
             </div>
 
@@ -149,7 +149,7 @@ export const App: React.FC = () => {
                   👨‍🏫
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-all">Lecturer Console</h3>
+                  <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-all">Lecturer Dashboard</h3>
                   <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                     Register courses, configure grace & lateness rules, generate dynamic anti-proxy QR codes, and monitor check-ins.
                   </p>
