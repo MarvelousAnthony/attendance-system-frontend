@@ -8,9 +8,6 @@ type ViewMode = "lecturer" | "student" | "analytics";
 export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewMode>("lecturer");
 
-  // A default mock session ID for the demo/walkthrough
-  const mockSessionId = "f1a2b3c4-d5e6-4f8a-9b0c-1d2e3f4a5b6c";
-
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col">
       {/* Universal Demo Switcher Header */}
@@ -56,7 +53,7 @@ export const App: React.FC = () => {
       {/* Render Selected View */}
       <div className="flex-1">
         {currentView === "lecturer" && (
-          <LecturerSessionView sessionId={mockSessionId} />
+          <LecturerSessionView />
         )}
         {currentView === "student" && (
           <StudentPortal />

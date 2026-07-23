@@ -115,7 +115,7 @@ export const AnalyticsDashboard: React.FC = () => {
   const kpis = useMemo(() => {
     const totalPercentage = students.reduce((acc, curr) => acc + curr.percentage, 0);
     const averageAttendance = (totalPercentage / students.length).toFixed(1);
-    const atRiskCount = students.filter((s) => s.percentage < 75.0).length;
+    const atRiskCount = students.filter((s) => s.percentage < 70.0).length;
 
     return {
       averageAttendance,
@@ -308,7 +308,7 @@ export const AnalyticsDashboard: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-slate-800/60">
               {processedStudents.data.map((student) => {
-                const isCritical = student.percentage < 75.0;
+                const isCritical = student.percentage < 70.0;
                 return (
                   <tr
                     key={student.id}

@@ -301,7 +301,19 @@ export const StudentPortal: React.FC = () => {
             </div>
             <div className="min-w-0">
               <h2 className="text-xl font-extrabold text-white truncate tracking-tight">{profile.name}</h2>
-              <p className="text-xs font-semibold text-slate-500 font-mono mt-0.5 truncate">{profile.studentId}</p>
+              <div className="flex items-center space-x-2 mt-0.5">
+                <p className="text-xs font-semibold text-slate-500 font-mono truncate">{profile.studentId}</p>
+                <span className="text-slate-700 font-mono text-xs">•</span>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("student_profile");
+                    setProfile(null);
+                  }}
+                  className="text-[10px] font-bold text-rose-450 hover:text-rose-400 uppercase tracking-wider cursor-pointer transition-colors"
+                >
+                  Reset Profile
+                </button>
+              </div>
             </div>
           </div>
 
@@ -531,6 +543,14 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
         alert("Please fill in all fields.");
         return;
       }
+      
+      // Matric format check: 00/0000
+      const matricRegex = /^\d{2}\/\d{4}$/;
+      if (!matricRegex.test(studentId)) {
+        alert("Matric Number must be in the format: 00/0000 (e.g., 20/4321)");
+        return;
+      }
+      
       setStep("academic");
     } else if (step === "academic") {
       setStep("face");
