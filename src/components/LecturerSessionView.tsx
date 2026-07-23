@@ -93,7 +93,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
       setToken(data.token);
 
       // Sync secondsLeft precisely with server expiration
-      const expires = new Date(data.expiresAt).getTime();
+      const expires = new Date(data.expiresAt || (data as any).expires_at).getTime();
       const now = new Date().getTime();
       const diff = Math.max(1, Math.round((expires - now) / 1000));
       setSecondsLeft(diff);
