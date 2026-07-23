@@ -543,6 +543,8 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
   const [customDepartment, setCustomDepartment] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
+  const [isSubmittingOnboard, setIsSubmittingOnboard] = useState(false);
+  const [onboardError, setOnboardError] = useState<string | null>(null);
 
   const departments = [
     "Computer Engineering",
@@ -594,17 +596,48 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
     }, 200);
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
+    setIsSubmittingOnboard(true);
+    setOnboardError(null);
     const finalDept = department === "Other" ? customDepartment : department;
-    onComplete({
-      name,
-      email,
-      studentId,
-      department: finalDept,
-      attendancePercentage: 100,
-      attendedSessions: 0,
-      totalSessions: 0,
-    });
+    
+    // Generate a mock 128 float array face encoding JSON string
+    const mockVector = Array.from({ length: 128 }, () => Math.random()).toString();
+    const faceEncodingStr = `[${mockVector}]`;
+
+    try {
+      const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/students/onboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          student_id: studentId,
+          department: finalDept,
+          face_encoding: faceEncodingStr,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.detail || "Student onboarding failed.");
+      }
+
+      onComplete({
+        name,
+        email,
+        studentId,
+        department: finalDept,
+        attendancePercentage: 100,
+        attendedSessions: 0,
+        totalSessions: 0,
+      });
+    } catch (err: any) {
+      console.error(err);
+      setOnboardError(err.message || "Failed to sync profile with database. Please check your internet connection.");
+    } finally {
+      setIsSubmittingOnboard(false);
+    }
   };
 
   return (
@@ -768,23 +801,44 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
         {/* Step 4: Ready */}
         {step === "ready" && (
           <div className="space-y-5 text-center">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/5 animate-bounce">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
+            {onboardError ? (
+              <>
+                <div className="w-16 h-16 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto shadow-lg shadow-rose-500/5 animate-pulse">
+                  ⚠️
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-white">Database Sync Failed</h3>
+                  <p className="text-xs text-rose-400 leading-relaxed">{onboardError}</p>
+                </div>
+                <button
+                  onClick={handleFinish}
+                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 cursor-pointer"
+                >
+                  Retry Sync
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/5 animate-bounce">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
 
-            <div className="space-y-1.5">
-              <h3 className="text-lg font-bold text-white">Registration Complete!</h3>
-              <p className="text-xs text-slate-400">Your profile details and facial signature has been successfully compiled and securely registered.</p>
-            </div>
+                <div className="space-y-1.5">
+                  <h3 className="text-lg font-bold text-white">Registration Ready!</h3>
+                  <p className="text-xs text-slate-400">Your profile details and facial signature has been successfully compiled and securely registered.</p>
+                </div>
 
-            <button
-              onClick={handleFinish}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-600/20 active:scale-98 cursor-pointer"
-            >
-              Go to Dashboard
-            </button>
+                <button
+                  onClick={handleFinish}
+                  disabled={isSubmittingOnboard}
+                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-600/20 active:scale-98 cursor-pointer disabled:opacity-50"
+                >
+                  {isSubmittingOnboard ? "Syncing Profile with Database..." : "Go to Dashboard"}
+                </button>
+              </>
+            )}
           </div>
         )}
 
