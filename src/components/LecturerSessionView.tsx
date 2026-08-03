@@ -793,16 +793,17 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
                       <label className="font-bold text-slate-400">Geofencing Radius</label>
-                      <span className="font-bold font-mono text-indigo-400">{radius} meters</span>
+                      <span className="font-bold font-mono text-indigo-400">{radius === 999999 ? "Disabled" : `${radius} meters`}</span>
                     </div>
                     <select
                       value={radius}
                       onChange={(e) => setRadius(parseInt(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 font-bold"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 font-bold cursor-pointer"
                     >
                       <option value={20}>20 meters (Tight Room)</option>
                       <option value={50}>50 meters (Standard Hall)</option>
                       <option value={100}>100 meters (Large Lecture Theater)</option>
+                      <option value={999999}>No Geofencing (Disable Limit)</option>
                     </select>
                   </div>
 
