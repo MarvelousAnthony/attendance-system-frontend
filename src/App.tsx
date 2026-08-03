@@ -5,6 +5,12 @@ import { AnalyticsDashboard } from "./components/AnalyticsDashboard";
 
 type ViewMode = "landing" | "student" | "lecturer" | "lecturer-login" | "analytics" | "analytics-login";
 
+// List of authorized institutional administrators (e.g. Dean of Faculty, Admin, HODs)
+const APPROVED_ADMINS = [
+  { email: "admin@university.edu", password: "password", name: "System Admin" },
+  { email: "dean@university.edu", password: "deanpassword2026", name: "Dean of Faculty" }
+];
+
 export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewMode>("landing");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -105,10 +111,14 @@ export const App: React.FC = () => {
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminEmail === "admin@university.edu" && adminPwd === "password") {
+    const admin = APPROVED_ADMINS.find(
+      (a) => a.email.toLowerCase() === adminEmail.toLowerCase() && a.password === adminPwd
+    );
+    if (admin) {
       setCurrentView("analytics");
     } else {
-      alert("Invalid administrator credentials. Use:\nEmail: admin@university.edu\nPassword: password");
+      const allowedLogins = APPROVED_ADMINS.map(a => `${a.email}`).join("\n");
+      alert(`Invalid administrator credentials.\n\nApproved administrator emails:\n${allowedLogins}`);
     }
   };
 
