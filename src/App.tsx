@@ -5,11 +5,7 @@ import { AnalyticsDashboard } from "./components/AnalyticsDashboard";
 
 type ViewMode = "landing" | "student" | "lecturer" | "lecturer-login" | "analytics" | "analytics-login";
 
-// List of authorized institutional administrators (e.g. Dean of Faculty, Admin, HODs)
-const APPROVED_ADMINS = [
-  { email: "admin@university.edu", password: "password", name: "System Admin" },
-  { email: "dean@university.edu", password: "deanpassword2026", name: "Dean of Faculty" }
-];
+
 
 export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewMode>("landing");
@@ -109,16 +105,29 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleAdminLogin = (e: React.FormEvent) => {
+  const [isAdminLoggingIn, setIsAdminLoggingIn] = useState(false);
+
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const admin = APPROVED_ADMINS.find(
-      (a) => a.email.toLowerCase() === adminEmail.toLowerCase() && a.password === adminPwd
-    );
-    if (admin) {
+    setIsAdminLoggingIn(true);
+    try {
+      const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/admins/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: adminEmail,
+          password: adminPwd,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Authentication failed.");
+      
+      localStorage.setItem("admin_profile", JSON.stringify({ id: data.id, name: data.name, email: data.email }));
       setCurrentView("analytics");
-    } else {
-      const allowedLogins = APPROVED_ADMINS.map(a => `${a.email}`).join("\n");
-      alert(`Invalid administrator credentials.\n\nApproved administrator emails:\n${allowedLogins}`);
+    } catch (err: any) {
+      alert(err.message || "Invalid administrator credentials.");
+    } finally {
+      setIsAdminLoggingIn(false);
     }
   };
 
@@ -481,9 +490,17 @@ export const App: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-rose-600/25 active:scale-98 cursor-pointer text-sm"
+                disabled={isAdminLoggingIn}
+                className="w-full py-2.5 bg-rose-600 hover:bg-rose-500 disabled:bg-rose-800/60 disabled:text-rose-350 text-white font-bold rounded-xl transition-all shadow-lg shadow-rose-600/25 active:scale-98 cursor-pointer text-sm flex items-center justify-center space-x-2"
               >
-                Log In
+                {isAdminLoggingIn ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-rose-400 border-t-white rounded-full animate-spin" />
+                    <span>Logging in...</span>
+                  </>
+                ) : (
+                  <span>Log In</span>
+                )}
               </button>
             </form>
             <button

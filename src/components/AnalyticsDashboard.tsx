@@ -54,6 +54,49 @@ const CustomChartTooltip = ({ active, payload, label, valueSuffix = "" }: any) =
 };
 
 export const AnalyticsDashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<"analytics" | "admin-mgmt">("analytics");
+  
+  // Register Admin Form States
+  const [newAdminName, setNewAdminName] = useState("");
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [newAdminPwd, setNewAdminPwd] = useState("");
+  const [isRegisteringAdmin, setIsRegisteringAdmin] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState<string | null>(null);
+  const [registerError, setRegisterError] = useState<string | null>(null);
+
+  const handleRegisterAdminSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAdminName || !newAdminEmail || !newAdminPwd) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    setIsRegisteringAdmin(true);
+    setRegisterSuccess(null);
+    setRegisterError(null);
+    try {
+      const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/admins/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newAdminName,
+          email: newAdminEmail,
+          password: newAdminPwd,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Registration failed.");
+      
+      setRegisterSuccess(`Administrator account successfully created for ${data.name} (${data.email})!`);
+      setNewAdminName("");
+      setNewAdminEmail("");
+      setNewAdminPwd("");
+    } catch (err: any) {
+      setRegisterError(err.message || "Failed to register administrator.");
+    } finally {
+      setIsRegisteringAdmin(false);
+    }
+  };
+
   // --- MOCK DATABASE METRICS ---
 
   // 1. Weekly Historical Rate (last 8 weeks)
@@ -162,9 +205,33 @@ export const AnalyticsDashboard: React.FC = () => {
         <h1 className="text-3xl font-extrabold text-white tracking-tight">Analytics & Reporting</h1>
         <p className="text-sm text-slate-400 mt-1">Class status metrics and attendance logs summary</p>
       </div>
-
-      {/* 1. METRIC GRID (KPI CARDS) */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Tab Navigation */}
+      <div className="flex border-b border-slate-800 space-x-6">
+        <button
+          onClick={() => setActiveTab("analytics")}
+          className={`pb-3 text-sm font-bold transition-all cursor-pointer ${
+            activeTab === "analytics"
+              ? "text-indigo-400 border-b-2 border-indigo-500 font-extrabold"
+              : "text-slate-500 hover:text-slate-300"
+          }`}
+        >
+          Attendance Analytics
+        </button>
+        <button
+          onClick={() => setActiveTab("admin-mgmt")}
+          className={`pb-3 text-sm font-bold transition-all cursor-pointer ${
+            activeTab === "admin-mgmt"
+              ? "text-indigo-400 border-b-2 border-indigo-500 font-extrabold"
+              : "text-slate-500 hover:text-slate-300"
+          }`}
+        >
+          Administrator Management
+        </button>
+      </div>
+      {activeTab === "analytics" && (
+        <>
+          {/* 1. METRIC GRID (KPI CARDS) */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Average Attendance Card */}
         <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex items-center justify-between">
@@ -394,6 +461,83 @@ export const AnalyticsDashboard: React.FC = () => {
         </div>
 
       </section>
+        </>
+      )}
+
+      {/* 4. ADMIN USER REGISTRATION FORM */}
+      {activeTab === "admin-mgmt" && (
+        <section className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6 mx-auto animate-fadeIn text-left mt-8">
+          <div className="space-y-1.5 text-center">
+            <h3 className="text-xl font-bold text-white tracking-tight">Register New Administrator</h3>
+            <p className="text-xs text-slate-400">Create login credentials for institutional colleagues (e.g. the Dean)</p>
+          </div>
+
+          {registerSuccess && (
+            <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-xs font-semibold">
+              {registerSuccess}
+            </div>
+          )}
+
+          {registerError && (
+            <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-xs font-semibold">
+              {registerError}
+            </div>
+          )}
+
+          <form onSubmit={handleRegisterAdminSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name</label>
+              <input
+                type="text"
+                placeholder="e.g. Dean of Faculty"
+                value={newAdminName}
+                onChange={(e) => setNewAdminName(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-850 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold"
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Admin Email</label>
+              <input
+                type="email"
+                placeholder="e.g. dean.engineering@university.edu"
+                value={newAdminEmail}
+                onChange={(e) => setNewAdminEmail(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-850 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold"
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Create Password</label>
+              <input
+                type="password"
+                placeholder="e.g. password123"
+                value={newAdminPwd}
+                onChange={(e) => setNewAdminPwd(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-850 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isRegisteringAdmin}
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800/60 disabled:text-indigo-300 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/25 active:scale-98 cursor-pointer text-sm flex items-center justify-center space-x-2"
+            >
+              {isRegisteringAdmin ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-indigo-400 border-t-white rounded-full animate-spin" />
+                  <span>Registering...</span>
+                </>
+              ) : (
+                <span>Register Administrator</span>
+              )}
+            </button>
+          </form>
+        </section>
+      )}
     </div>
   );
 };
