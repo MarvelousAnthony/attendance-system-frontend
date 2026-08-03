@@ -533,62 +533,53 @@ export const App: React.FC = () => {
         </div>
       )}
 
+      {/* Responsive Dashboard Top Navigation Bar */}
+      {(currentView === "student" || currentView === "lecturer" || currentView === "analytics") && (
+        <nav className="w-full bg-slate-950/80 backdrop-blur-md border-b border-slate-900 px-4 py-3.5 md:px-8 flex items-center justify-between sticky top-0 z-50">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/35">
+              <svg className="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <span className="text-xs font-bold text-white tracking-wider uppercase">
+              {currentView === "student" && "Student Portal"}
+              {currentView === "lecturer" && "Lecturer Console"}
+              {currentView === "analytics" && "Admin Analytics"}
+            </span>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer"
+            >
+              {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+            </button>
+            <button
+              onClick={() => setShowLogoutConfirm(true)}
+              className="px-3 py-1.5 bg-rose-600/10 border border-rose-500/20 text-rose-450 hover:bg-rose-600 hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer"
+            >
+              Log Out
+            </button>
+          </div>
+        </nav>
+      )}
+
       {/* Render Selected View */}
       <div className="flex-1 flex flex-col">
         {currentView === "lecturer" && (
-          <div className="flex-1 flex flex-col relative">
-            <div className="absolute top-4 right-4 z-50 flex items-center space-x-2">
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
-              >
-                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
-              </button>
-              <button
-                onClick={() => setShowLogoutConfirm(true)}
-                className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
-              >
-                Log Out
-              </button>
-            </div>
+          <div className="flex-1 flex flex-col">
             <LecturerSessionView lecturer={lecturerProfile} />
           </div>
         )}
         {currentView === "student" && (
-          <div className="flex-1 flex flex-col relative">
-            <div className="absolute top-4 right-4 z-50 flex items-center space-x-2">
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
-              >
-                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
-              </button>
-              <button
-                onClick={() => setShowLogoutConfirm(true)}
-                className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
-              >
-                Log Out
-              </button>
-            </div>
+          <div className="flex-1 flex flex-col">
             <StudentPortal />
           </div>
         )}
         {currentView === "analytics" && (
-          <div className="flex-1 flex flex-col relative">
-            <div className="absolute top-4 right-4 z-50 flex items-center space-x-2">
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
-              >
-                {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
-              </button>
-              <button
-                onClick={() => setShowLogoutConfirm(true)}
-                className="px-3 py-1.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
-              >
-                Log Out
-              </button>
-            </div>
+          <div className="flex-1 flex flex-col">
             <AnalyticsDashboard />
           </div>
         )}
