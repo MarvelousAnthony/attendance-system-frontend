@@ -278,7 +278,7 @@ export const App: React.FC = () => {
                     {isLoggingIn ? (
                       <>
                         <div className="w-4 h-4 border-2 border-indigo-400 border-t-white rounded-full animate-spin" />
-                        <span>Logging In (Waking Server)...</span>
+                        <span>Logging in...</span>
                       </>
                     ) : (
                       <span>Log In</span>
@@ -363,7 +363,7 @@ export const App: React.FC = () => {
                     {isRegistering ? (
                       <>
                         <div className="w-4 h-4 border-2 border-emerald-400 border-t-white rounded-full animate-spin" />
-                        <span>Registering (Waking Server)...</span>
+                        <span>Registering Account...</span>
                       </>
                     ) : (
                       <span>Register Account</span>
