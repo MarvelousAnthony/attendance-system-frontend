@@ -557,6 +557,30 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
   const [scanProgress, setScanProgress] = useState(0);
   const [isSubmittingOnboard, setIsSubmittingOnboard] = useState(false);
   const [onboardError, setOnboardError] = useState<string | null>(null);
+  const [webcamStream, setWebcamStream] = useState<MediaStream | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    let activeStream: MediaStream | null = null;
+    if (step === "face") {
+      navigator.mediaDevices.getUserMedia({ video: { width: 300, height: 300, facingMode: "user" } })
+        .then((stream) => {
+          activeStream = stream;
+          setWebcamStream(stream);
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch((err) => {
+          console.error("Camera access failed:", err);
+        });
+    }
+    return () => {
+      if (activeStream) {
+        activeStream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [step]);
 
   const departments = [
     "Computer Engineering",
@@ -772,21 +796,30 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
 
             {/* Circular Camera Scan View */}
             <div className="w-40 h-40 rounded-full border-2 border-dashed border-indigo-500/40 mx-auto flex items-center justify-center p-2 relative overflow-hidden bg-slate-950">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover rounded-full absolute inset-0"
+                style={{ transform: "scaleX(-1)" }}
+              />
+
               {isScanning ? (
-                <>
-                  <div className="absolute inset-0 bg-indigo-600/10 flex items-center justify-center">
-                    {/* Scanner horizontal sweep line */}
-                    <div className="absolute top-0 left-0 w-full h-0.5 bg-indigo-400 shadow-md shadow-indigo-400/50 animate-bounce" style={{ animationDuration: "2s" }} />
-                    <span className="text-xs font-mono font-bold text-indigo-400 animate-pulse">{scanProgress}%</span>
-                  </div>
-                </>
-              ) : (
-                <div className="text-slate-500 flex flex-col items-center space-y-1.5">
-                  <svg className="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Camera Ready</span>
+                <div className="absolute inset-0 bg-indigo-600/10 flex items-center justify-center">
+                  {/* Scanner horizontal sweep line */}
+                  <div className="absolute top-0 left-0 w-full h-0.5 bg-indigo-400 shadow-md shadow-indigo-400/50 animate-bounce" style={{ animationDuration: "2s" }} />
+                  <span className="text-xs font-mono font-bold text-indigo-400 bg-slate-950/80 px-2 py-0.5 rounded-md animate-pulse">{scanProgress}%</span>
                 </div>
+              ) : (
+                !webcamStream && (
+                  <div className="text-slate-500 flex flex-col items-center space-y-1.5 absolute z-10 bg-slate-950/90 inset-0 justify-center">
+                    <svg className="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Requesting Camera...</span>
+                  </div>
+                )
               )}
             </div>
 
