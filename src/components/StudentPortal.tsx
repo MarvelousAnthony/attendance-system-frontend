@@ -558,6 +558,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
   const [isSubmittingOnboard, setIsSubmittingOnboard] = useState(false);
   const [onboardError, setOnboardError] = useState<string | null>(null);
   const [webcamStream, setWebcamStream] = useState<MediaStream | null>(null);
+  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -624,6 +625,27 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
         if (prev >= 100) {
           clearInterval(interval);
           setIsScanning(false);
+
+          // Capture frame from video stream
+          if (videoRef.current) {
+            try {
+              const canvas = document.createElement("canvas");
+              canvas.width = 320;
+              canvas.height = 320;
+              const ctx = canvas.getContext("2d");
+              if (ctx) {
+                // Mirror horizontally to match preview styling
+                ctx.translate(320, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(videoRef.current, 0, 0, 320, 320);
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+                setCapturedPhoto(dataUrl);
+              }
+            } catch (err) {
+              console.error("Failed to capture frame:", err);
+            }
+          }
+
           setStep("ready");
           return 100;
         }
@@ -865,24 +887,47 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
               </>
             ) : (
               <>
-                <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/5 animate-bounce">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
+                {capturedPhoto ? (
+                  <div className="w-24 h-24 rounded-full border-2 border-emerald-500/40 mx-auto relative overflow-hidden bg-slate-950 shadow-xl shadow-emerald-500/10">
+                    <img src={capturedPhoto} alt="Captured Face" className="w-full h-full object-cover" />
+                    <div className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-emerald-500 border border-emerald-400 text-white flex items-center justify-center shadow">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/5 animate-bounce">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
 
                 <div className="space-y-1.5">
                   <h3 className="text-lg font-bold text-white">Registration Ready!</h3>
-                  <p className="text-xs text-slate-400">Your profile details and facial signature has been successfully compiled and securely registered.</p>
+                  <p className="text-xs text-slate-400 font-medium">Verify your captured biometric profile photo. If it is blurry or misaligned, you can retake the scan before saving.</p>
                 </div>
 
-                <button
-                  onClick={handleFinish}
-                  disabled={isSubmittingOnboard}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-600/20 active:scale-98 cursor-pointer disabled:opacity-50"
-                >
-                  {isSubmittingOnboard ? "Syncing Profile with Database..." : "Go to Dashboard"}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setStep("face");
+                      setCapturedPhoto(null);
+                    }}
+                    disabled={isSubmittingOnboard}
+                    className="w-1/3 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 font-bold rounded-xl transition-all cursor-pointer disabled:opacity-50 text-sm"
+                  >
+                    Retake
+                  </button>
+                  <button
+                    onClick={handleFinish}
+                    disabled={isSubmittingOnboard}
+                    className="w-2/3 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-600/20 active:scale-98 cursor-pointer disabled:opacity-50 text-sm"
+                  >
+                    {isSubmittingOnboard ? "Saving..." : "Go to Dashboard"}
+                  </button>
+                </div>
               </>
             )}
           </div>
