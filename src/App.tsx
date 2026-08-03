@@ -27,6 +27,8 @@ export const App: React.FC = () => {
   const [showAdminPwd, setShowAdminPwd] = useState(false);
   
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
   // Sync theme changes to the HTML element to support global browser background styles
   useEffect(() => {
@@ -47,6 +49,7 @@ export const App: React.FC = () => {
       return;
     }
 
+    setIsLoggingIn(true);
     try {
       const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/lecturers/login", {
         method: "POST",
@@ -61,11 +64,14 @@ export const App: React.FC = () => {
       setCurrentView("lecturer");
     } catch (err: any) {
       alert(err.message || "Failed to log in. Please check your credentials.");
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
   const handleLecturerRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsRegistering(true);
     try {
       const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/lecturers/register", {
         method: "POST",
@@ -87,6 +93,8 @@ export const App: React.FC = () => {
       setRegisterPassword("");
     } catch (err: any) {
       alert(err.message || "Failed to register account.");
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -268,9 +276,17 @@ export const App: React.FC = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/25 active:scale-98 cursor-pointer text-sm animate-fadeIn"
+                    disabled={isLoggingIn}
+                    className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800/60 disabled:text-indigo-300 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/25 active:scale-98 cursor-pointer text-sm animate-fadeIn flex items-center justify-center space-x-2"
                   >
-                    Log In
+                    {isLoggingIn ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-indigo-400 border-t-white rounded-full animate-spin" />
+                        <span>Logging In (Waking Server)...</span>
+                      </>
+                    ) : (
+                      <span>Log In</span>
+                    )}
                   </button>
                 </form>
                 <div className="text-center text-xs text-slate-500">
@@ -345,9 +361,17 @@ export const App: React.FC = () => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-600/25 active:scale-98 cursor-pointer text-sm animate-fadeIn"
+                    disabled={isRegistering}
+                    className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-800/60 disabled:text-emerald-300 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-600/25 active:scale-98 cursor-pointer text-sm animate-fadeIn flex items-center justify-center space-x-2"
                   >
-                    Register Account
+                    {isRegistering ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-emerald-400 border-t-white rounded-full animate-spin" />
+                        <span>Registering (Waking Server)...</span>
+                      </>
+                    ) : (
+                      <span>Register Account</span>
+                    )}
                   </button>
                 </form>
                 <div className="text-center text-xs text-slate-500">
