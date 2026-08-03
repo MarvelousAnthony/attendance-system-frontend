@@ -17,6 +17,7 @@ export const App: React.FC = () => {
   const [registerName, setRegisterName] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+  const [registerAccessCode, setRegisterAccessCode] = useState("");
   
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPwd, setAdminPwd] = useState("");
@@ -69,6 +70,10 @@ export const App: React.FC = () => {
 
   const handleLecturerRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!registerAccessCode) {
+      alert("Please enter the lecturer registration access code.");
+      return;
+    }
     setIsRegistering(true);
     try {
       const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/lecturers/register", {
@@ -78,6 +83,7 @@ export const App: React.FC = () => {
           name: registerName,
           email: registerEmail,
           password: registerPassword,
+          access_code: registerAccessCode,
         }),
       });
       const data = await res.json();
@@ -89,6 +95,7 @@ export const App: React.FC = () => {
       setRegisterName("");
       setRegisterEmail("");
       setRegisterPassword("");
+      setRegisterAccessCode("");
     } catch (err: any) {
       alert(err.message || "Failed to register account.");
     } finally {
@@ -356,6 +363,17 @@ export const App: React.FC = () => {
                         )}
                       </button>
                     </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Lecturer Access Code</label>
+                    <input
+                      type="password"
+                      placeholder="Enter signup authorization code"
+                      value={registerAccessCode}
+                      onChange={(e) => setRegisterAccessCode(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all font-mono"
+                      required
+                    />
                   </div>
                   <button
                     type="submit"
