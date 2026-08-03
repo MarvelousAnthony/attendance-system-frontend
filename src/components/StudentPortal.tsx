@@ -48,6 +48,26 @@ export const StudentPortal: React.FC = () => {
     return saved ? JSON.parse(saved) : null;
   });
 
+  // Verify in background if student profile still exists in database (e.g. self-healing after db resets)
+  useEffect(() => {
+    if (profile && profile.studentId) {
+      fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/students/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: profile.studentId }),
+      })
+      .then(res => {
+        if (!res.ok) {
+          localStorage.removeItem("student_profile");
+          setProfile(null);
+        }
+      })
+      .catch(err => {
+        console.error("Background student verification failed:", err);
+      });
+    }
+  }, [profile?.studentId]);
+
   const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([
     {
       id: "hist-1",
