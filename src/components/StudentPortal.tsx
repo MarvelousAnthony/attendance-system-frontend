@@ -10,7 +10,22 @@ interface StudentProfile {
   attendancePercentage: number;
   attendedSessions: number;
   totalSessions: number;
+  faceEncoding?: string;
 }
+
+const DEPARTMENTS = [
+  "Computer Engineering",
+  "Computer Science",
+  "Electrical Engineering",
+  "Mechanical Engineering",
+  "Civil Engineering",
+  "Biochemistry",
+  "Microbiology",
+  "Business Administration",
+  "Accounting",
+  "Economics",
+  "Other"
+];
 
 interface RecentCheckIn {
   id: string;
@@ -19,9 +34,15 @@ interface RecentCheckIn {
   timestamp: string;
   status: "present" | "late";
 }
-
 export const StudentPortal: React.FC = () => {
-  // --- MOCK USER PROFILE DATA ---
+  // Edit Profile States
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editStudentId, setEditStudentId] = useState("");
+  const [editDept, setEditDept] = useState("");
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [editProfileError, setEditProfileError] = useState<string | null>(null);
+
   const [profile, setProfile] = useState<StudentProfile | null>(() => {
     const saved = localStorage.getItem("student_profile");
     return saved ? JSON.parse(saved) : null;
@@ -295,6 +316,61 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
+  const handleSaveEditProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profile) return;
+    if (!editName || !editStudentId) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    // Matric format check: 00/0000
+    const matricRegex = /^\d{2}\/\d{4}$/;
+    if (!matricRegex.test(editStudentId)) {
+      alert("Matric Number must be in the format: 00/0000 (e.g., 20/4321)");
+      return;
+    }
+
+    setIsSavingProfile(true);
+    setEditProfileError(null);
+
+    try {
+      const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/students/onboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editName,
+          email: profile.email,
+          student_id: editStudentId,
+          department: editDept,
+          face_encoding: profile.faceEncoding || "[]",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.detail || "Failed to update profile.");
+      }
+
+      const updatedProfile: StudentProfile = {
+        ...profile,
+        name: editName,
+        studentId: editStudentId,
+        department: editDept,
+        faceEncoding: data.face_encoding || profile.faceEncoding,
+      };
+
+      localStorage.setItem("student_profile", JSON.stringify(updatedProfile));
+      setProfile(updatedProfile);
+      setShowEditProfile(false);
+      alert("Profile updated successfully!");
+    } catch (err: any) {
+      setEditProfileError(err.message || "Failed to save profile. Please check your internet connection.");
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
   // --- RENDERING ROUTINES ---
  
   if (!profile) {
@@ -325,6 +401,18 @@ export const StudentPortal: React.FC = () => {
               <h2 className="text-xl font-extrabold text-white truncate tracking-tight">{profile.name}</h2>
               <div className="flex items-center space-x-2 mt-0.5">
                 <p className="text-xs font-semibold text-slate-500 font-mono truncate">{profile.studentId}</p>
+                <span className="text-slate-700 font-mono text-xs">•</span>
+                <button
+                  onClick={() => {
+                    setEditName(profile.name);
+                    setEditStudentId(profile.studentId);
+                    setEditDept(profile.department || "Computer Engineering");
+                    setShowEditProfile(true);
+                  }}
+                  className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 uppercase tracking-wider cursor-pointer transition-colors"
+                >
+                  Edit Profile
+                </button>
                 <span className="text-slate-700 font-mono text-xs">•</span>
                 <button
                   onClick={() => {
@@ -536,7 +624,82 @@ export const StudentPortal: React.FC = () => {
             </div>
           </section>
         )}
-        
+
+      {/* EDIT PROFILE MODAL OVERLAY */}
+      {showEditProfile && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn text-left">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-sm space-y-6 shadow-2xl relative">
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-white">Edit Profile Details</h3>
+              <p className="text-xs text-slate-400">Update your registration details. Face data will remain preserved.</p>
+            </div>
+
+            {editProfileError && (
+              <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-450 rounded-xl text-xs font-semibold">
+                {editProfileError}
+              </div>
+            )}
+
+            <form onSubmit={handleSaveEditProfile} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Matric Number</label>
+                <input
+                  type="text"
+                  value={editStudentId}
+                  placeholder="e.g. 24/0858"
+                  onChange={(e) => setEditStudentId(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-mono font-semibold"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Department</label>
+                <select
+                  value={editDept}
+                  onChange={(e) => setEditDept(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800/80 rounded-xl px-4 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold cursor-pointer"
+                >
+                  {DEPARTMENTS.map((dept) => (
+                    <option key={dept} value={dept} className="bg-slate-950 text-slate-100">
+                      {dept}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex space-x-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowEditProfile(false)}
+                  disabled={isSavingProfile}
+                  className="w-1/2 py-2.5 bg-slate-950 border border-slate-850 hover:bg-slate-900 text-slate-300 font-bold rounded-xl transition-all cursor-pointer text-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingProfile}
+                  className="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-98 cursor-pointer disabled:opacity-50 text-xs"
+                >
+                  {isSavingProfile ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );
@@ -583,19 +746,6 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
     };
   }, [step]);
 
-  const departments = [
-    "Computer Engineering",
-    "Computer Science",
-    "Electrical Engineering",
-    "Mechanical Engineering",
-    "Civil Engineering",
-    "Biochemistry",
-    "Microbiology",
-    "Business Administration",
-    "Accounting",
-    "Economics",
-    "Other"
-  ];
 
   const handleNext = () => {
     if (step === "details") {
@@ -690,6 +840,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
         attendancePercentage: 100,
         attendedSessions: 0,
         totalSessions: 0,
+        faceEncoding: data.face_encoding || faceEncodingStr,
       });
     } catch (err: any) {
       console.error(err);
@@ -772,7 +923,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
                 onChange={(e) => setDepartment(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
               >
-                {departments.map((dept) => (
+                {DEPARTMENTS.map((dept) => (
                   <option key={dept} value={dept}>{dept}</option>
                 ))}
               </select>
@@ -933,8 +1084,8 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
           </div>
         )}
 
-      </div>
     </div>
+  </div>
   );
 };
 export default StudentPortal;
