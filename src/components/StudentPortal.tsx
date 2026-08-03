@@ -371,16 +371,125 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
+  // Student Login States
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [loginIdentifier, setLoginIdentifier] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const handleStudentLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginIdentifier) return;
+    setIsLoggingIn(true);
+    setLoginError(null);
+    try {
+      const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/students/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: loginIdentifier }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.detail || "Student profile not found.");
+      }
+      
+      const newProfile: StudentProfile = {
+        name: data.name,
+        email: data.email,
+        studentId: data.student_id,
+        dbId: data.id,
+        department: data.department || "Computer Engineering",
+        attendancePercentage: 100, // starting default
+        attendedSessions: 0,
+        totalSessions: 0,
+        faceEncoding: data.face_encoding,
+      };
+      
+      localStorage.setItem("student_profile", JSON.stringify(newProfile));
+      setProfile(newProfile);
+    } catch (err: any) {
+      setLoginError(err.message || "Failed to log in.");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
   // --- RENDERING ROUTINES ---
- 
+  
   if (!profile) {
+    if (isRegisterMode) {
+      return (
+        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6 font-sans">
+          <StudentOnboarding
+            onComplete={(newProfile) => {
+              localStorage.setItem("student_profile", JSON.stringify(newProfile));
+              setProfile(newProfile);
+            }}
+          />
+          <button
+            onClick={() => setIsRegisterMode(false)}
+            className="text-xs font-semibold text-slate-500 hover:text-slate-400 cursor-pointer mt-4 underline"
+          >
+            Already have a profile? Log In
+          </button>
+        </div>
+      );
+    }
+
     return (
-      <StudentOnboarding
-        onComplete={(newProfile) => {
-          localStorage.setItem("student_profile", JSON.stringify(newProfile));
-          setProfile(newProfile);
-        }}
-      />
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6 font-sans">
+        <div className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+          <div className="text-center space-y-1.5 animate-fadeIn">
+            <h2 className="text-2xl font-extrabold text-white tracking-tight">Student Attendance Hub</h2>
+            <p className="text-xs text-slate-400">Access your attendance records and check-in scanner</p>
+          </div>
+
+          {loginError && (
+            <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-450 rounded-xl text-xs font-semibold animate-pulse">
+              {loginError}
+            </div>
+          )}
+
+          <form onSubmit={handleStudentLogin} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email or Matric Number</label>
+              <input
+                type="text"
+                placeholder="e.g. anthony@gmail.com or 24/0858"
+                value={loginIdentifier}
+                onChange={(e) => setLoginIdentifier(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoggingIn}
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800/60 disabled:text-indigo-300 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/25 active:scale-98 cursor-pointer text-sm animate-fadeIn flex items-center justify-center space-x-2"
+            >
+              {isLoggingIn ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-indigo-400 border-t-white rounded-full animate-spin" />
+                  <span>Logging in...</span>
+                </>
+              ) : (
+                <span>Log In</span>
+              )}
+            </button>
+          </form>
+
+          <div className="text-center text-xs text-slate-500">
+            First time using the system?{" "}
+            <button
+              onClick={() => setIsRegisterMode(true)}
+              className="font-bold text-indigo-400 hover:text-indigo-300 cursor-pointer underline"
+            >
+              Register Profile
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
