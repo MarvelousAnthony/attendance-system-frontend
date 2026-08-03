@@ -854,14 +854,17 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   onClick={() => handleLaunch(false)}
                   className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-600/35 transition-all active:scale-98 cursor-pointer"
                 >
-                  Start Active Class QR
+                  Start Live Attendance Session
                 </button>
                 <button
                   onClick={() => handleLaunch(true)}
-                  className="w-full py-3 bg-slate-800 hover:bg-slate-750 text-slate-300 text-sm font-bold rounded-xl border border-slate-700/50 transition-all cursor-pointer"
+                  className="w-full py-3 bg-slate-800 hover:bg-slate-750 text-slate-400 hover:text-slate-300 text-sm font-bold rounded-xl border border-slate-700/50 transition-all cursor-pointer"
                 >
-                  Start Simulation Mode
+                  Start Demo Simulation (Test Run)
                 </button>
+                <p className="text-[10px] text-slate-500 text-center leading-relaxed">
+                  Use <b>Live Attendance</b> for actual students checking in via mobile. Use <b>Demo Simulation</b> for offline testing or project presentations.
+                </p>
               </div>
             </div>
           ) : (
