@@ -588,6 +588,14 @@ export const App: React.FC = () => {
               <button
                 onClick={() => {
                   setShowLogoutConfirm(false);
+                  if (currentView === "student") {
+                    localStorage.removeItem("student_profile");
+                  } else if (currentView === "lecturer") {
+                    localStorage.removeItem("lecturer_token");
+                    setLecturerProfile(null);
+                  } else if (currentView === "analytics") {
+                    localStorage.removeItem("admin_profile");
+                  }
                   setCurrentView("landing");
                 }}
                 className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-lg shadow-rose-600/25 active:scale-98"
