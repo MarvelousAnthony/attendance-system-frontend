@@ -13,7 +13,6 @@ interface LecturerSessionViewProps {
 export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   sessionId: propSessionId,
   initialSessionDetails,
-  totalRegisteredStudents = 45,
   lecturer,
 }) => {
   // --- STATE CONFIGURATION ---
@@ -21,6 +20,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   const [token, setToken] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState<number>(15);
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
+  const [activeSessionExpectedStudents, setActiveSessionExpectedStudents] = useState<number>(45);
 
   // Loading & Error States
   const [isSessionLoading, setIsSessionLoading] = useState<boolean>(false);
@@ -290,9 +290,10 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   if (!session) {
     return (
       <LecturerDashboard
-        onLaunchSession={(launchedSession, demo) => {
+        onLaunchSession={(launchedSession, demo, expectedStudents) => {
           setSession(launchedSession);
           setIsDemoMode(demo);
+          setActiveSessionExpectedStudents(expectedStudents);
         }}
         lecturer={lecturer}
       />
@@ -394,7 +395,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
           <div className="lg:col-span-7">
             <CheckInRoster
               records={records}
-              totalRegistered={totalRegisteredStudents}
+              totalRegistered={activeSessionExpectedStudents}
               isLoading={isRosterLoading}
               error={rosterError}
               onRetry={fetchRoster}
@@ -415,7 +416,7 @@ interface CourseItem {
 }
 
 interface LecturerDashboardProps {
-  onLaunchSession: (session: SessionDetails, demo: boolean) => void;
+  onLaunchSession: (session: SessionDetails, demo: boolean, expectedStudents: number) => void;
   lecturer?: { id: string; name: string; email: string } | null;
 }
 
@@ -424,6 +425,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
   const [isLoadingCourses, setIsLoadingCourses] = useState(false);
   const [coursesError, setCoursesError] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseItem | null>(null);
+  const [totalStudents, setTotalStudents] = useState<number>(45);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -575,7 +577,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
     };
 
     if (demo) {
-      onLaunchSession(newSession, true);
+      onLaunchSession(newSession, true, totalStudents);
       return;
     }
 
@@ -606,14 +608,14 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
           requireDoubleSigning: data.require_double_signing,
           isCheckoutOpen: data.is_checkout_open,
         };
-        onLaunchSession(liveSession, false);
+        onLaunchSession(liveSession, false, totalStudents);
       } else {
         console.warn("API rejected session initialization, falling back to mock session.");
-        onLaunchSession(newSession, true);
+        onLaunchSession(newSession, true, totalStudents);
       }
     } catch (err) {
       console.warn("Backend offline during session launch, running in simulation mode.", err);
-      onLaunchSession(newSession, true);
+      onLaunchSession(newSession, true, totalStudents);
     }
   };
 
@@ -846,6 +848,22 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                       />
                       <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 peer-checked:after:bg-white"></div>
                     </label>
+                  </div>
+
+                  {/* Expected Class Size */}
+                  <div className="bg-slate-950/60 border border-slate-850 rounded-2xl p-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-slate-300">Expected Class Size</p>
+                      <p className="text-[10px] text-slate-500 mt-0.5 font-sans">Total number of students enrolled in this course.</p>
+                    </div>
+                    <input
+                      type="number"
+                      min="1"
+                      max="500"
+                      value={totalStudents}
+                      onChange={(e) => setTotalStudents(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-16 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-center text-indigo-400 font-bold focus:outline-none focus:border-indigo-500 font-mono"
+                    />
                   </div>
                 </div>
               </div>

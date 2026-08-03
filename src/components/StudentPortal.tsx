@@ -68,29 +68,7 @@ export const StudentPortal: React.FC = () => {
     }
   }, [profile?.studentId]);
 
-  const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([
-    {
-      id: "hist-1",
-      courseCode: "CSE-402",
-      courseTitle: "Distributed Systems & Cloud Computing",
-      timestamp: "2026-07-14T09:05:12Z",
-      status: "present",
-    },
-    {
-      id: "hist-2",
-      courseCode: "CSE-408",
-      courseTitle: "Artificial Intelligence & Robotics",
-      timestamp: "2026-07-11T13:12:04Z",
-      status: "late",
-    },
-    {
-      id: "hist-3",
-      courseCode: "CSE-402",
-      courseTitle: "Distributed Systems & Cloud Computing",
-      timestamp: "2026-07-09T09:01:45Z",
-      status: "present",
-    },
-  ]);
+  const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([]);
 
   // --- STATE CONFIGURATION ---
   const [showScanner, setShowScanner] = useState<boolean>(false);

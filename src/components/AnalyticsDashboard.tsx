@@ -125,28 +125,7 @@ export const AnalyticsDashboard: React.FC = () => {
   ];
 
   // 3. Roster of 20 students representing class status
-  const [students] = useState<StudentMetric[]>([
-    { id: "s-1", name: "David Kim", email: "d.kim@university.edu", studentId: "std-1004", attendedClasses: 28, totalClasses: 30, percentage: 93.3 },
-    { id: "s-2", name: "Sarah Jenkins", email: "s.jenkins@university.edu", studentId: "std-1001", attendedClasses: 27, totalClasses: 30, percentage: 90.0 },
-    { id: "s-3", name: "Michael Chen", email: "m.chen@university.edu", studentId: "std-1002", attendedClasses: 29, totalClasses: 30, percentage: 96.7 },
-    { id: "s-4", name: "Emily Rodriguez", email: "e.rod@university.edu", studentId: "std-1003", attendedClasses: 20, totalClasses: 30, percentage: 66.7 }, // Below 75%
-    { id: "s-5", name: "James Wilson", email: "j.wilson@university.edu", studentId: "std-1005", attendedClasses: 25, totalClasses: 30, percentage: 83.3 },
-    { id: "s-6", name: "Jessica Taylor", email: "j.taylor@university.edu", studentId: "std-1006", attendedClasses: 19, totalClasses: 30, percentage: 63.3 }, // Below 75%
-    { id: "s-7", name: "Lucas Silva", email: "l.silva@university.edu", studentId: "std-1007", attendedClasses: 26, totalClasses: 30, percentage: 86.7 },
-    { id: "s-8", name: "Sophia Muller", email: "s.muller@university.edu", studentId: "std-1008", attendedClasses: 22, totalClasses: 30, percentage: 73.3 }, // Below 75%
-    { id: "s-9", name: "Robert Novak", email: "r.novak@university.edu", studentId: "std-1009", attendedClasses: 27, totalClasses: 30, percentage: 90.0 },
-    { id: "s-10", name: "Amanda Martinez", email: "a.martinez@university.edu", studentId: "std-1010", attendedClasses: 21, totalClasses: 30, percentage: 70.0 }, // Below 75%
-    { id: "s-11", name: "William Patel", email: "w.patel@university.edu", studentId: "std-1011", attendedClasses: 28, totalClasses: 30, percentage: 93.3 },
-    { id: "s-12", name: "Olivia Smith", email: "o.smith@university.edu", studentId: "std-1012", attendedClasses: 25, totalClasses: 30, percentage: 83.3 },
-    { id: "s-13", name: "John Doe", email: "j.doe@university.edu", studentId: "std-1013", attendedClasses: 24, totalClasses: 30, percentage: 80.0 },
-    { id: "s-14", name: "Jane Miller", email: "j.miller@university.edu", studentId: "std-1014", attendedClasses: 18, totalClasses: 30, percentage: 60.0 }, // Below 75%
-    { id: "s-15", name: "Brian O'Conner", email: "b.ocon@university.edu", studentId: "std-1015", attendedClasses: 30, totalClasses: 30, percentage: 100.0 },
-    { id: "s-16", name: "Clara Oswald", email: "c.oswald@university.edu", studentId: "std-1016", attendedClasses: 27, totalClasses: 30, percentage: 90.0 },
-    { id: "s-17", name: "Danielle Brooks", email: "d.brooks@university.edu", studentId: "std-1017", attendedClasses: 23, totalClasses: 30, percentage: 76.7 },
-    { id: "s-18", name: "Edward Elric", email: "e.elric@university.edu", studentId: "std-1018", attendedClasses: 15, totalClasses: 30, percentage: 50.0 }, // Below 75%
-    { id: "s-19", name: "Fiona Gallagher", email: "f.galla@university.edu", studentId: "std-1019", attendedClasses: 21, totalClasses: 30, percentage: 70.0 }, // Below 75%
-    { id: "s-20", name: "George Costanza", email: "g.costa@university.edu", studentId: "std-1020", attendedClasses: 14, totalClasses: 30, percentage: 46.7 }, // Below 75%
-  ]);
+  const [students] = useState<StudentMetric[]>([]);
 
   // --- STATE FOR PAGINATION AND SORTING ---
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -157,12 +136,12 @@ export const AnalyticsDashboard: React.FC = () => {
   // --- KPI COMPUTATIONS ---
   const kpis = useMemo(() => {
     const totalPercentage = students.reduce((acc, curr) => acc + curr.percentage, 0);
-    const averageAttendance = (totalPercentage / students.length).toFixed(1);
+    const averageAttendance = students.length > 0 ? (totalPercentage / students.length).toFixed(1) : "0.0";
     const atRiskCount = students.filter((s) => s.percentage < 70.0).length;
 
     return {
       averageAttendance,
-      totalSessions: 30,
+      totalSessions: students.length > 0 ? 30 : 0,
       atRiskCount,
     };
   }, [students]);
