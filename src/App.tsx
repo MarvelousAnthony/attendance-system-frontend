@@ -29,6 +29,7 @@ export const App: React.FC = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [lecturerProfile, setLecturerProfile] = useState<{ id: string; name: string; email: string } | null>(null);
 
   // Sync theme changes to the HTML element to support global browser background styles
   useEffect(() => {
@@ -57,6 +58,7 @@ export const App: React.FC = () => {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "Authentication failed.");
+      setLecturerProfile({ id: data.id, name: data.name, email: data.email });
       setCurrentView("lecturer");
     } catch (err: any) {
       alert(err.message || "Failed to log in. Please check your credentials.");
@@ -484,7 +486,7 @@ export const App: React.FC = () => {
                 Log Out
               </button>
             </div>
-            <LecturerSessionView />
+            <LecturerSessionView lecturer={lecturerProfile} />
           </div>
         )}
         {currentView === "student" && (

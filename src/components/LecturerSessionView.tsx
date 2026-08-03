@@ -7,12 +7,14 @@ interface LecturerSessionViewProps {
   sessionId?: string;
   initialSessionDetails?: SessionDetails;
   totalRegisteredStudents?: number;
+  lecturer?: { id: string; name: string; email: string } | null;
 }
 
 export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   sessionId: propSessionId,
   initialSessionDetails,
   totalRegisteredStudents = 45,
+  lecturer,
 }) => {
   // --- STATE CONFIGURATION ---
   const [session, setSession] = useState<SessionDetails | null>(initialSessionDetails || null);
@@ -292,6 +294,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
           setSession(launchedSession);
           setIsDemoMode(demo);
         }}
+        lecturer={lecturer}
       />
     );
   }
@@ -413,9 +416,10 @@ interface CourseItem {
 
 interface LecturerDashboardProps {
   onLaunchSession: (session: SessionDetails, demo: boolean) => void;
+  lecturer?: { id: string; name: string; email: string } | null;
 }
 
-const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }) => {
+const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, lecturer }) => {
   const [courses, setCourses] = useState<CourseItem[]>([]);
   const [isLoadingCourses, setIsLoadingCourses] = useState(false);
   const [coursesError, setCoursesError] = useState<string | null>(null);
@@ -621,7 +625,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession }
         <div className="md:col-span-7 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-xl font-extrabold text-white tracking-tight">Dr. Elizabeth Vance</h2>
+              <h2 className="text-xl font-extrabold text-white tracking-tight">{lecturer?.name || "Dr. Elizabeth Vance"}</h2>
               <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider font-mono">Lecturer Dashboard</p>
             </div>
             <button
