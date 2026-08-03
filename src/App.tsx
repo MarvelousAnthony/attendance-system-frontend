@@ -10,7 +10,7 @@ export const App: React.FC = () => {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   
   // Login / Register States
-  const [lecturerEmail, setLecturerEmail] = useState("elizabeth.vance@university.edu");
+  const [lecturerEmail, setLecturerEmail] = useState("");
   const [lecturerPwd, setLecturerPwd] = useState("");
   
   const [isRegisterMode, setIsRegisterMode] = useState(false);
@@ -18,7 +18,7 @@ export const App: React.FC = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   
-  const [adminEmail, setAdminEmail] = useState("admin@university.edu");
+  const [adminEmail, setAdminEmail] = useState("");
   const [adminPwd, setAdminPwd] = useState("");
   
   // Password Visibility toggles
@@ -43,11 +43,7 @@ export const App: React.FC = () => {
   const handleLecturerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Safety login fallback: Always allow the default lecturer login to succeed immediately
-    if (lecturerEmail === "elizabeth.vance@university.edu" && lecturerPwd === "password") {
-      setCurrentView("lecturer");
-      return;
-    }
+
 
     setIsLoggingIn(true);
     try {
