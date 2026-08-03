@@ -50,11 +50,12 @@ export const StudentPortal: React.FC = () => {
 
   // Verify in background if student profile still exists in database (e.g. self-healing after db resets)
   useEffect(() => {
-    if (profile && profile.studentId) {
+    const identifier = profile?.studentId || (profile as any)?.student_id || profile?.email;
+    if (profile && identifier) {
       fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/students/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: profile.studentId }),
+        body: JSON.stringify({ identifier }),
       })
       .then(res => {
         if (!res.ok) {
@@ -66,7 +67,7 @@ export const StudentPortal: React.FC = () => {
         console.error("Background student verification failed:", err);
       });
     }
-  }, [profile?.studentId]);
+  }, [profile?.studentId, (profile as any)?.student_id, profile?.email]);
 
   const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([]);
 
