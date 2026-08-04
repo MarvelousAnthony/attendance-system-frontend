@@ -319,7 +319,7 @@ export const AnalyticsDashboard: React.FC = () => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500/20 border border-rose-500/30 block" />
-            <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">Highlight indicates Critical (&lt;75%)</span>
+            <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">Highlight indicates Critical (&lt;70%)</span>
           </div>
         </div>
 
