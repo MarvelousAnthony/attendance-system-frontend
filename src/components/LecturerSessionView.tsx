@@ -94,11 +94,8 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
 
       setToken(data.token);
 
-      // Sync secondsLeft precisely with server expiration
-      const expires = new Date(data.expiresAt || (data as any).expires_at).getTime();
-      const now = new Date().getTime();
-      const diff = Math.max(1, Math.round((expires - now) / 1000));
-      setSecondsLeft(diff);
+      // Set countdown to 15 seconds locally (prevents infinite fetch loops if laptop clock is out of sync)
+      setSecondsLeft(15);
     } catch (err: any) {
       setTokenError(err.message || "Failed to establish secure token tunnel");
       // Prompt option to switch to demo mode if network is offline
