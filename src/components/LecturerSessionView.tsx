@@ -121,7 +121,18 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
       const res = await fetch(`${API_BASE_URL}/sessions/${currentSessionId}/attendance`);
       if (!res.ok) throw new Error(`HTTP Error ${res.status}: Failed to sync roster`);
       const data = await res.json();
-      setRecords(data);
+      const mapped = data.map((item: any) => ({
+        id: item.id,
+        studentId: item.student_matric_no || item.student_id,
+        studentName: item.student_name,
+        sessionId: item.session_id,
+        timestamp: item.timestamp,
+        status: item.status,
+        deviceHash: item.device_hash || "unknown",
+        studentLatitude: item.student_latitude || 0,
+        studentLongitude: item.student_longitude || 0,
+      }));
+      setRecords(mapped);
     } catch (err: any) {
       setRosterError(err.message || "Attendance synchronization disrupted");
     } finally {

@@ -121,20 +121,12 @@ export const QrGenerator: React.FC<QrGeneratorProps> = ({
 
         {token && !tokenError && (
           <div className="flex flex-col items-center space-y-6">
-            <div className="bg-white p-4 rounded-xl shadow-lg border border-slate-200">
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
               <QRCodeSVG
                 value={token}
-                size={220}
-                level="H"
+                size={380}
+                level="L"
                 includeMargin={false}
-                imageSettings={{
-                  src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/fastapi.svg",
-                  x: undefined,
-                  y: undefined,
-                  height: 35,
-                  width: 35,
-                  excavate: true,
-                }}
               />
             </div>
             

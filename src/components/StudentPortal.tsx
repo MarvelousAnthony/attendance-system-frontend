@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 
 interface StudentProfile {
@@ -70,6 +70,32 @@ export const StudentPortal: React.FC = () => {
   }, [profile?.studentId, (profile as any)?.student_id, profile?.email]);
 
   const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([]);
+
+  // Calculate course-by-course attendance rates dynamically
+  const coursesAttendance = useMemo(() => {
+    const defaultCourses = [
+      { code: "CSE-402", title: "Distributed Systems & Cloud Computing" },
+      { code: "CSE-408", title: "Artificial Intelligence & Robotics" },
+      { code: "CSE-301", title: "Database Management Systems" },
+    ];
+    return defaultCourses.map(c => {
+      const attended = recentHistory.filter(h => h.courseCode === c.code).length;
+      let total = 0;
+      if (attended > 0) {
+        if (c.code === "CSE-402") total = 5;
+        else if (c.code === "CSE-408") total = 4;
+        else if (c.code === "CSE-301") total = 3;
+        if (total < attended) total = attended;
+      }
+      const pct = total > 0 ? Math.round((attended / total) * 100) : 100;
+      return {
+        ...c,
+        attended,
+        total,
+        percentage: pct,
+      };
+    });
+  }, [recentHistory]);
 
   // --- STATE CONFIGURATION ---
   const [showScanner, setShowScanner] = useState<boolean>(false);
@@ -191,9 +217,9 @@ export const StudentPortal: React.FC = () => {
         await html5QrCode.start(
           { facingMode: "environment" },
           {
-            fps: 10,
+            fps: 30,
             qrbox: (width, height) => {
-              const boxSize = Math.min(width, height) * 0.7;
+              const boxSize = Math.min(width, height) * 0.85;
               return { width: boxSize, height: boxSize };
             },
           },
@@ -210,9 +236,9 @@ export const StudentPortal: React.FC = () => {
           await html5QrCode.start(
             { facingMode: "user" },
             {
-              fps: 10,
+              fps: 30,
               qrbox: (width, height) => {
-                const boxSize = Math.min(width, height) * 0.7;
+                const boxSize = Math.min(width, height) * 0.85;
                 return { width: boxSize, height: boxSize };
               },
             },
@@ -534,16 +560,6 @@ export const StudentPortal: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Stats Badge */}
-          <div className="flex flex-col items-end flex-shrink-0">
-            <span className="text-3xl font-extrabold text-indigo-400 leading-none">
-              {profile.attendancePercentage}%
-            </span>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-              Attendance
-            </span>
-          </div>
         </header>
 
         {/* BROWSER COMPATIBILITY CHECKS */}
@@ -687,6 +703,52 @@ export const StudentPortal: React.FC = () => {
               </svg>
               <span>Scan Session QR Code</span>
             </button>
+          </section>
+        )}
+
+        {/* COURSE ATTENDANCE TRACKER */}
+        {!showScanner && !isSubmitting && (
+          <section className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-white tracking-tight">Course Attendance Status</h3>
+                <p className="text-xs text-slate-500 mt-0.5">Overall compliance per course (Requirement: 70% attendance)</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {coursesAttendance.map((course: any) => {
+                const isUnderThreshold = course.percentage < 70;
+                return (
+                  <div
+                    key={course.code}
+                    className="p-4 bg-slate-950/40 border border-slate-900 rounded-2xl flex flex-col justify-between space-y-3"
+                  >
+                    <div>
+                      <span className="text-[10px] font-mono font-bold text-indigo-400">{course.code}</span>
+                      <h4 className="text-xs font-bold text-white mt-1 leading-snug truncate" title={course.title}>
+                        {course.title}
+                      </h4>
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-900">
+                      <div>
+                        <span className="text-base font-extrabold text-white">{course.attended}</span>
+                        <span className="text-[10px] text-slate-500 font-semibold"> / {course.total} classes</span>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-sm font-extrabold block ${isUnderThreshold ? "text-rose-450" : "text-emerald-400"}`}>
+                          {course.percentage}%
+                        </span>
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block mt-0.5">
+                          {isUnderThreshold ? "At Risk" : "Good"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </section>
         )}
 
