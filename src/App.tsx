@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { LecturerSessionView } from "./components/LecturerSessionView";
 import { StudentPortal } from "./components/StudentPortal";
+import { LecturerSessionView } from "./components/LecturerSessionView";
 import { AnalyticsDashboard } from "./components/AnalyticsDashboard";
 
 type ViewMode = "landing" | "student" | "lecturer" | "lecturer-login" | "analytics" | "analytics-login";
 
-
-
 export const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewMode>("landing");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
   
   // Login / Register States
   const [lecturerEmail, setLecturerEmail] = useState("");
@@ -152,10 +158,10 @@ export const App: React.FC = () => {
             <div className="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/25 px-4 py-1.5 rounded-full text-indigo-400 text-xs font-bold tracking-widest uppercase">
               Institutional Attendance Hub
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-none bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-none bg-gradient-to-r from-slate-900 via-slate-700 to-slate-850 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
               QR Attend & Verify
             </h1>
-            <p className="text-sm md:text-base text-slate-400 max-w-md mx-auto">
+            <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-md mx-auto">
               Secure, anti-cheating, biometric-verified check-in system for university courses.
             </p>
           </div>
@@ -165,7 +171,7 @@ export const App: React.FC = () => {
             {/* Student Card */}
             <div 
               onClick={() => setCurrentView("student")}
-              className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 hover:border-indigo-500/40 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col justify-between group"
+              className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 hover:border-indigo-500/40 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col justify-between group"
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all">
@@ -175,8 +181,8 @@ export const App: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-all">Student Attendance Hub</h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-400 transition-all">Student Attendance Hub</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                     Scan dynamic session QR codes, register face ID biometric profiles, and view your real-time attendance logs.
                   </p>
                 </div>
@@ -192,7 +198,7 @@ export const App: React.FC = () => {
                 setIsRegisterMode(false);
                 setCurrentView("lecturer-login");
               }}
-              className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 hover:border-emerald-500/40 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col justify-between group"
+              className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 hover:border-emerald-500/40 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col justify-between group"
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all">
@@ -201,8 +207,8 @@ export const App: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-all">Lecturer Dashboard</h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-400 transition-all">Lecturer Dashboard</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                     Register courses, configure grace & lateness rules, generate dynamic anti-proxy QR codes, and monitor check-ins.
                   </p>
                 </div>
@@ -215,7 +221,7 @@ export const App: React.FC = () => {
             {/* Admin Card */}
             <div 
               onClick={() => setCurrentView("analytics-login")}
-              className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 hover:border-rose-500/40 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col justify-between group"
+              className="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 hover:border-rose-500/40 rounded-3xl p-6 shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col justify-between group"
             >
               <div className="space-y-4">
                 <div className="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-all">
@@ -224,8 +230,8 @@ export const App: React.FC = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-rose-400 transition-all">Admin Analytics</h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-rose-400 transition-all">Admin Analytics</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                     Access institutional reporting charts, monitor attendance percentages, flag at-risk students, and audit logs.
                   </p>
                 </div>
@@ -250,40 +256,40 @@ export const App: React.FC = () => {
             </button>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-lg dark:shadow-2xl space-y-6">
             {!isRegisterMode ? (
               // Login Mode
               <>
                 <div className="text-center space-y-1">
-                  <h2 className="text-2xl font-bold text-white">Lecturer Login</h2>
-                  <p className="text-xs text-slate-400">Sign in to manage your classes and QR sessions</p>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Lecturer Login</h2>
+                  <p className="text-xs text-slate-600 dark:text-slate-400">Sign in to manage your classes and QR sessions</p>
                 </div>
                 <form onSubmit={handleLecturerLogin} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email Address</label>
+                    <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Email Address</label>
                     <input
                       type="email"
                       value={lecturerEmail}
                       onChange={(e) => setLecturerEmail(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Password</label>
+                    <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Password</label>
                     <div className="relative">
                       <input
                         type={showLecturerPwd ? "text" : "password"}
                         placeholder="e.g. password"
                         value={lecturerPwd}
                         onChange={(e) => setLecturerPwd(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all text-slate-100"
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all text-slate-100"
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowLecturerPwd(!showLecturerPwd)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 cursor-pointer"
                         title={showLecturerPwd ? "Hide Password" : "Show Password"}
                       >
                         {showLecturerPwd ? (
@@ -314,7 +320,7 @@ export const App: React.FC = () => {
                     )}
                   </button>
                 </form>
-                <div className="text-center text-xs text-slate-500">
+                <div className="text-center text-xs text-slate-500 dark:text-slate-500">
                   First time using the system?{" "}
                   <button 
                     onClick={() => setIsRegisterMode(true)}
@@ -328,47 +334,47 @@ export const App: React.FC = () => {
               // Register Mode
               <>
                 <div className="text-center space-y-1">
-                  <h2 className="text-2xl font-bold text-white">Create Lecturer Account</h2>
-                  <p className="text-xs text-slate-400">Register as a lecturer to configure dynamic courses</p>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Create Lecturer Account</h2>
+                  <p className="text-xs text-slate-600 dark:text-slate-400">Register as a lecturer to configure dynamic courses</p>
                 </div>
                 <form onSubmit={handleLecturerRegister} className="space-y-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name</label>
+                    <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Full Name</label>
                     <input
                       type="text"
                       placeholder="e.g. Dr. Anthony Marvelous"
                       value={registerName}
                       onChange={(e) => setRegisterName(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email Address</label>
+                    <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Email Address</label>
                     <input
                       type="email"
                       placeholder="e.g. anthony@university.edu"
                       value={registerEmail}
                       onChange={(e) => setRegisterEmail(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Password</label>
+                    <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Password</label>
                     <div className="relative">
                       <input
                         type={showRegisterPwd ? "text" : "password"}
                         placeholder="Choose a password"
                         value={registerPassword}
                         onChange={(e) => setRegisterPassword(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all text-slate-100"
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all text-slate-100"
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowRegisterPwd(!showRegisterPwd)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 cursor-pointer"
                         title={showRegisterPwd ? "Hide Password" : "Show Password"}
                       >
                         {showRegisterPwd ? (
@@ -385,20 +391,20 @@ export const App: React.FC = () => {
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Lecturer Access Code</label>
+                    <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Lecturer Access Code</label>
                     <div className="relative">
                       <input
                         type={showRegisterAccessCode ? "text" : "password"}
                         placeholder="Enter signup authorization code"
                         value={registerAccessCode}
                         onChange={(e) => setRegisterAccessCode(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all font-mono text-slate-100"
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all font-mono text-slate-100"
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowRegisterAccessCode(!showRegisterAccessCode)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 cursor-pointer"
                         title={showRegisterAccessCode ? "Hide Access Code" : "Show Access Code"}
                       >
                         {showRegisterAccessCode ? (
@@ -429,7 +435,7 @@ export const App: React.FC = () => {
                     )}
                   </button>
                 </form>
-                <div className="text-center text-xs text-slate-500">
+                <div className="text-center text-xs text-slate-500 dark:text-slate-500">
                   Already have an account?{" "}
                   <button 
                     onClick={() => setIsRegisterMode(false)}
@@ -442,7 +448,7 @@ export const App: React.FC = () => {
             )}
             <button
               onClick={() => setCurrentView("landing")}
-              className="w-full text-center text-xs text-slate-500 hover:text-slate-300 font-semibold cursor-pointer"
+              className="w-full text-center text-xs text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 font-semibold cursor-pointer"
             >
               &larr; Back to Hub Home
             </button>
@@ -462,37 +468,37 @@ export const App: React.FC = () => {
             </button>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl space-y-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-lg dark:shadow-2xl space-y-6">
             <div className="text-center space-y-1">
-              <h2 className="text-2xl font-bold text-white">Administrator Login</h2>
-              <p className="text-xs text-slate-400">Sign in to access campus attendance data and metrics</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Administrator Login</h2>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Sign in to access campus attendance data and metrics</p>
             </div>
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Admin Email</label>
+                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Admin Email</label>
                 <input
                   type="email"
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all"
                   required
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Password</label>
+                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Password</label>
                 <div className="relative">
                   <input
                     type={showAdminPwd ? "text" : "password"}
                     placeholder="e.g. password"
                     value={adminPwd}
                     onChange={(e) => setAdminPwd(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all text-slate-100"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl pl-4 pr-10 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all text-slate-100"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowAdminPwd(!showAdminPwd)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 cursor-pointer"
                     title={showAdminPwd ? "Hide Password" : "Show Password"}
                   >
                     {showAdminPwd ? (
@@ -525,7 +531,7 @@ export const App: React.FC = () => {
             </form>
             <button
               onClick={() => setCurrentView("landing")}
-              className="w-full text-center text-xs text-slate-500 hover:text-slate-300 font-semibold cursor-pointer"
+              className="w-full text-center text-xs text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 font-semibold cursor-pointer"
             >
               &larr; Back to Hub Home
             </button>
@@ -535,14 +541,14 @@ export const App: React.FC = () => {
 
       {/* Responsive Dashboard Top Navigation Bar */}
       {(currentView === "student" || currentView === "lecturer" || currentView === "analytics") && (
-        <nav className="w-full bg-slate-950/80 backdrop-blur-md border-b border-slate-900 px-4 py-3.5 md:px-8 flex items-center justify-between sticky top-0 z-50">
+        <nav className="w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-200 dark:border-slate-900 px-4 py-3.5 md:px-8 flex items-center justify-between sticky top-0 z-50">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/35">
               <svg className="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <span className="text-xs font-bold text-white tracking-wider uppercase">
+            <span className="text-xs font-bold text-slate-900 dark:text-white tracking-wider uppercase">
               {currentView === "student" && "Student Portal"}
               {currentView === "lecturer" && "Lecturer Console"}
               {currentView === "analytics" && "Admin Analytics"}
@@ -552,7 +558,7 @@ export const App: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer"
+              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-600 dark:text-slate-650 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer"
             >
               {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
             </button>
@@ -588,10 +594,10 @@ export const App: React.FC = () => {
       {/* Premium Custom Log Out Modal */}
       {showLogoutConfirm && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-sm w-full mx-4 shadow-2xl space-y-6 text-center animate-scaleIn">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl max-w-sm w-full mx-4 shadow-2xl space-y-6 text-center animate-scaleIn">
             <div className="space-y-1.5">
-              <h3 className="text-lg font-bold text-white">Log Out</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Log Out</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Are you sure you want to log out of your current session?
               </p>
             </div>
@@ -615,7 +621,7 @@ export const App: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-300 rounded-xl text-xs font-bold cursor-pointer transition-all border border-slate-750 hover:text-white"
+                className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-750 dark:text-slate-300 rounded-xl text-xs font-bold cursor-pointer transition-all border border-slate-750 hover:text-white"
               >
                 No, Stay
               </button>

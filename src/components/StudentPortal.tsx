@@ -101,6 +101,30 @@ export const StudentPortal: React.FC = () => {
     fetchAttendanceSummary();
   }, [recentHistory, fetchAttendanceSummary]);
 
+  const fetchCheckInHistory = useCallback(async () => {
+    if (!profile || !profile.dbId) return;
+    try {
+      const res = await fetch(`https://attendance-system-backend-b6ti.onrender.com/api/v1/students/${profile.dbId}/attendance`);
+      if (res.ok) {
+        const data = await res.json();
+        const mapped = data.map((item: any) => ({
+          id: item.id,
+          timestamp: item.timestamp,
+          status: item.status,
+          courseCode: item.courseCode || item.course_code,
+          courseTitle: item.courseTitle || item.course_title,
+        }));
+        setRecentHistory(mapped);
+      }
+    } catch (err) {
+      console.error("Failed to fetch check-in history:", err);
+    }
+  }, [profile?.dbId]);
+
+  useEffect(() => {
+    fetchCheckInHistory();
+  }, [profile?.dbId, fetchCheckInHistory]);
+
   // --- STATE CONFIGURATION ---
   const [showScanner, setShowScanner] = useState<boolean>(false);
   const [isCameraLoading, setIsCameraLoading] = useState<boolean>(false);
@@ -457,7 +481,7 @@ export const StudentPortal: React.FC = () => {
           />
           <button
             onClick={() => setIsRegisterMode(false)}
-            className="text-xs font-semibold text-slate-500 hover:text-slate-400 cursor-pointer mt-4 underline"
+            className="text-xs font-semibold text-slate-500 dark:text-slate-500 hover:text-slate-600 dark:text-slate-400 cursor-pointer mt-4 underline"
           >
             Already have a profile? Log In
           </button>
@@ -467,10 +491,10 @@ export const StudentPortal: React.FC = () => {
 
     return (
       <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6 font-sans">
-        <div className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+        <div className="max-w-md w-full bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl space-y-6">
           <div className="text-center space-y-1.5 animate-fadeIn">
-            <h2 className="text-2xl font-extrabold text-white tracking-tight">Student Attendance Hub</h2>
-            <p className="text-xs text-slate-400">Access your attendance records and check-in scanner</p>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Student Attendance Hub</h2>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Access your attendance records and check-in scanner</p>
           </div>
 
           {loginError && (
@@ -481,13 +505,13 @@ export const StudentPortal: React.FC = () => {
 
           <form onSubmit={handleStudentLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email or Matric Number</label>
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Email or Matric Number</label>
               <input
                 type="text"
                 placeholder="e.g. anthony@gmail.com or 24/0858"
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold"
+                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm text-slate-100 focus:outline-none focus:border-indigo-500 transition-all font-semibold"
                 required
               />
             </div>
@@ -508,7 +532,7 @@ export const StudentPortal: React.FC = () => {
             </button>
           </form>
 
-          <div className="text-center text-xs text-slate-500">
+          <div className="text-center text-xs text-slate-500 dark:text-slate-500">
             First time using the system?{" "}
             <button
               onClick={() => setIsRegisterMode(true)}
@@ -523,11 +547,11 @@ export const StudentPortal: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-start p-4 md:p-6 font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col items-center justify-start p-4 md:p-6 font-sans transition-colors duration-300">
       <div className="max-w-md w-full flex flex-col space-y-6">
         
         {/* DASHBOARD HEADER */}
-        <header className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex items-center justify-between">
+        <header className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex items-center justify-between">
           <div className="flex items-center space-x-4 min-w-0">
             {/* Student Initials Avatar */}
             <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-500/20 to-indigo-600/40 flex items-center justify-center border border-indigo-500/30 flex-shrink-0 shadow-lg shadow-indigo-500/10">
@@ -536,9 +560,9 @@ export const StudentPortal: React.FC = () => {
               </span>
             </div>
             <div className="min-w-0">
-              <h2 className="text-xl font-extrabold text-white truncate tracking-tight">{profile.name}</h2>
+              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white truncate tracking-tight">{profile.name}</h2>
               <div className="flex items-center space-x-2 mt-0.5">
-                <p className="text-xs font-semibold text-slate-500 font-mono truncate">{profile.studentId}</p>
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-500 font-mono truncate">{profile.studentId}</p>
                 <span className="text-slate-700 font-mono text-xs">•</span>
                 <button
                   onClick={() => {
@@ -574,7 +598,7 @@ export const StudentPortal: React.FC = () => {
             </svg>
             <div className="text-xs">
               <p className="font-bold text-rose-400">System Capability Warning</p>
-              <p className="text-slate-400 mt-0.5 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed">
                 {!isCompatible.camera && "• Camera hardware or permissions missing. "}
                 {!isCompatible.gps && "• Geolocation permissions or hardware disabled. "}
                 Please resolve in your device settings to register attendance.
@@ -595,7 +619,7 @@ export const StudentPortal: React.FC = () => {
               <p className="text-sm font-bold text-emerald-400">
                 {successResult.status === "incomplete" ? "Check-In Registered" : "Attendance Verified"}
               </p>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                 {successResult.status === "incomplete" ? (
                   <>
                     Your check-in was successfully logged for <strong>{successResult.courseCode}</strong>.
@@ -608,7 +632,7 @@ export const StudentPortal: React.FC = () => {
                   </>
                 )}
               </p>
-              <p className="text-[10px] font-mono text-slate-500 mt-1.5">
+              <p className="text-[10px] font-mono text-slate-500 dark:text-slate-500 mt-1.5">
                 Saved: {new Date(successResult.timestamp).toLocaleString()}
               </p>
             </div>
@@ -624,7 +648,7 @@ export const StudentPortal: React.FC = () => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-rose-400">Verification Rejected</p>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">{errorResult}</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">{errorResult}</p>
               <button
                 onClick={() => setShowScanner(true)}
                 className="mt-3 px-3 py-1.5 bg-rose-500/10 border border-rose-500/20 rounded-lg text-[10px] font-semibold text-rose-300 hover:bg-rose-500/20 transition-all active:scale-95"
@@ -640,8 +664,8 @@ export const StudentPortal: React.FC = () => {
           <div className="bg-slate-900 border border-indigo-500/20 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-xl space-y-4 animate-pulse">
             <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
             <div>
-              <p className="text-sm font-bold text-slate-200">Verifying Presence</p>
-              <p className="text-xs text-slate-400 mt-1">{submissionStep}</p>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Verifying Presence</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{submissionStep}</p>
             </div>
           </div>
         )}
@@ -650,10 +674,10 @@ export const StudentPortal: React.FC = () => {
         {showScanner && (
           <div className="flex flex-col bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl relative">
             <div className="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-950/60">
-              <h3 className="text-sm font-bold text-white tracking-wide">Dynamic QR Scanner</h3>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">Dynamic QR Scanner</h3>
               <button
                 onClick={() => setShowScanner(false)}
-                className="text-xs font-semibold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl active:scale-95 transition-all"
+                className="text-xs font-semibold text-slate-600 dark:text-slate-650 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl active:scale-95 transition-all"
               >
                 Cancel
               </button>
@@ -664,7 +688,7 @@ export const StudentPortal: React.FC = () => {
               {isCameraLoading && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/90 space-y-3 z-10">
                   <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
-                  <p className="text-xs text-slate-400">Activating camera lense...</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400">Activating camera lense...</p>
                 </div>
               )}
 
@@ -674,7 +698,7 @@ export const StudentPortal: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                   <p className="text-xs font-bold text-rose-400">Camera Access Blocked</p>
-                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{scannerError}</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-500 mt-1 leading-relaxed">{scannerError}</p>
                 </div>
               )}
               
@@ -683,23 +707,23 @@ export const StudentPortal: React.FC = () => {
             </div>
 
             <div className="p-4 text-center bg-slate-950/60 border-t border-slate-800/60">
-              <p className="text-xs text-slate-400">Position the QR code inside the box to capture token</p>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Position the QR code inside the box to capture token</p>
             </div>
           </div>
         )}
 
         {/* DASHBOARD ACTIONS */}
         {!showScanner && !isSubmitting && (
-          <section className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col space-y-4">
-            <h3 className="text-base font-bold text-white tracking-tight">Register Presence</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+          <section className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex flex-col space-y-4">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Register Presence</h3>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Scan the dynamic QR code displayed on the lecturer's projector screen. Geolocation bounds and hardware signature locks will verify attendance.
             </p>
             
             <button
               onClick={() => setShowScanner(true)}
               disabled={!isCompatible.camera || !isCompatible.gps}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:border-slate-800/20 text-white font-bold rounded-2xl transition-all duration-300 active:scale-95 shadow-lg shadow-indigo-600/35 border border-indigo-500/30 flex items-center justify-center space-x-2"
+              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 dark:text-slate-500 disabled:border-slate-800/20 text-white font-bold rounded-2xl transition-all duration-300 active:scale-95 shadow-lg shadow-indigo-600/35 border border-indigo-500/30 flex items-center justify-center space-x-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m0 11v1m4-6h1m-11 0h1m2-2a2 2 0 11.001 3.999A2 2 0 0112 10z" />
@@ -712,11 +736,11 @@ export const StudentPortal: React.FC = () => {
 
         {/* COURSE ATTENDANCE TRACKER */}
         {!showScanner && !isSubmitting && (
-          <section className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col space-y-4">
+          <section className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex flex-col space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
               <div>
-                <h3 className="text-base font-bold text-white tracking-tight">Course Attendance Status</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Overall compliance per course (Requirement: 70% attendance)</p>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Course Attendance Status</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-500 mt-0.5">Overall compliance per course (Requirement: 70% attendance)</p>
               </div>
             </div>
 
@@ -726,25 +750,25 @@ export const StudentPortal: React.FC = () => {
                 return (
                   <div
                     key={course.code}
-                    className="p-4 bg-slate-950/40 border border-slate-900 rounded-2xl flex flex-col justify-between space-y-3"
+                    className="p-4 bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-200 dark:border-slate-900 rounded-2xl flex flex-col justify-between space-y-3"
                   >
                     <div>
                       <span className="text-[10px] font-mono font-bold text-indigo-400">{course.code}</span>
-                      <h4 className="text-xs font-bold text-white mt-1 leading-snug truncate" title={course.title}>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white mt-1 leading-snug truncate" title={course.title}>
                         {course.title}
                       </h4>
                     </div>
                     
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-900">
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-900">
                       <div>
-                        <span className="text-base font-extrabold text-white">{course.attended}</span>
-                        <span className="text-[10px] text-slate-500 font-semibold"> / {course.total} classes</span>
+                        <span className="text-base font-extrabold text-slate-900 dark:text-white">{course.attended}</span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-500 font-semibold"> / {course.total} classes</span>
                       </div>
                       <div className="text-right">
                         <span className={`text-sm font-extrabold block ${isUnderThreshold ? "text-rose-450" : "text-emerald-400"}`}>
                           {course.percentage}%
                         </span>
-                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block mt-0.5">
+                        <span className="text-[9px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest block mt-0.5">
                           {isUnderThreshold ? "At Risk" : "Good"}
                         </span>
                       </div>
@@ -758,11 +782,11 @@ export const StudentPortal: React.FC = () => {
 
         {/* HISTORICAL CHECK-INS */}
         {!showScanner && !isSubmitting && (
-          <section className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col space-y-4">
+          <section className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex flex-col space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white tracking-tight">Recent Attendance</h3>
-              <span className="text-[10px] font-bold text-slate-500 tracking-wider">
-                {profile.attendedSessions} / {profile.totalSessions} Sessions
+              <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Recent Attendance</h3>
+              <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 tracking-wider">
+                {coursesAttendance.reduce((acc: number, c: any) => acc + c.attended, 0)} / {coursesAttendance.reduce((acc: number, c: any) => acc + c.total, 0)} Sessions
               </span>
             </div>
 
@@ -770,14 +794,14 @@ export const StudentPortal: React.FC = () => {
               {recentHistory.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-3.5 bg-slate-950/40 border border-slate-900 rounded-2xl hover:border-slate-800 transition-all duration-300"
+                  className="flex items-center justify-between p-3.5 bg-slate-100 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-200 dark:border-slate-900 rounded-2xl hover:border-slate-800 transition-all duration-300"
                 >
                   <div className="min-w-0">
                     <p className="text-xs font-semibold text-white truncate">{item.courseTitle}</p>
-                    <p className="text-[10px] text-slate-500 mt-0.5 font-mono">{item.courseCode}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-500 mt-0.5 font-mono">{item.courseCode}</p>
                   </div>
                   <div className="flex items-center space-x-3 flex-shrink-0 pl-3">
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[10px] font-mono text-slate-600 dark:text-slate-400">
                       {new Date(item.timestamp).toLocaleDateString([], {
                         month: "short",
                         day: "numeric",
@@ -804,8 +828,8 @@ export const StudentPortal: React.FC = () => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn text-left">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-sm space-y-6 shadow-2xl relative">
             <div className="space-y-1">
-              <h3 className="text-lg font-bold text-white">Edit Profile Details</h3>
-              <p className="text-xs text-slate-400">Update your registration details. Face data will remain preserved.</p>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Edit Profile Details</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Update your registration details. Face data will remain preserved.</p>
             </div>
 
             {editProfileError && (
@@ -816,7 +840,7 @@ export const StudentPortal: React.FC = () => {
 
             <form onSubmit={handleSaveEditProfile} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Full Name</label>
                 <input
                   type="text"
                   value={editName}
@@ -827,7 +851,7 @@ export const StudentPortal: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Matric Number</label>
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Matric Number</label>
                 <input
                   type="text"
                   value={editStudentId}
@@ -839,7 +863,7 @@ export const StudentPortal: React.FC = () => {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Department</label>
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">Department</label>
                 <select
                   value={editDept}
                   onChange={(e) => setEditDept(e.target.value)}
@@ -858,7 +882,7 @@ export const StudentPortal: React.FC = () => {
                   type="button"
                   onClick={() => setShowEditProfile(false)}
                   disabled={isSavingProfile}
-                  className="w-1/2 py-2.5 bg-slate-950 border border-slate-850 hover:bg-slate-900 text-slate-300 font-bold rounded-xl transition-all cursor-pointer text-xs"
+                  className="w-1/2 py-2.5 bg-slate-950 border border-slate-850 hover:bg-slate-900 text-slate-750 dark:text-slate-300 font-bold rounded-xl transition-all cursor-pointer text-xs"
                 >
                   Cancel
                 </button>
@@ -1026,56 +1050,56 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 md:p-6 font-sans">
-      <div className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl space-y-6">
         
         {/* Header */}
         <div className="text-center space-y-1.5">
-          <h2 className="text-2xl font-extrabold text-white tracking-tight">Student Registration</h2>
-          <p className="text-xs text-slate-400">Onboard your profile to register attendance school-wide</p>
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Student Registration</h2>
+          <p className="text-xs text-slate-600 dark:text-slate-400">Onboard your profile to register attendance school-wide</p>
         </div>
 
         {/* Step Indicator */}
         <div className="flex items-center justify-between px-4">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "details" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400"}`}>1</div>
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "details" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-600 dark:text-slate-400"}`}>1</div>
           <div className="flex-1 h-0.5 bg-slate-800 mx-2" />
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "academic" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400"}`}>2</div>
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "academic" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-600 dark:text-slate-400"}`}>2</div>
           <div className="flex-1 h-0.5 bg-slate-800 mx-2" />
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "face" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400"}`}>3</div>
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "face" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-600 dark:text-slate-400"}`}>3</div>
           <div className="flex-1 h-0.5 bg-slate-800 mx-2" />
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "ready" ? "bg-emerald-600 text-white" : "bg-slate-800 text-slate-400"}`}>✓</div>
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step === "ready" ? "bg-emerald-600 text-white" : "bg-slate-800 text-slate-600 dark:text-slate-400"}`}>✓</div>
         </div>
 
         {/* Step 1: Personal Details */}
         {step === "details" && (
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name</label>
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Full Name</label>
               <input
                 type="text"
                 placeholder="e.g. David Kim"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Matric / Student ID</label>
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Matric / Student ID</label>
               <input
                 type="text"
                 placeholder="e.g. 23/0987"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all font-mono"
+                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all font-mono"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Email Address</label>
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Email Address</label>
               <input
                 type="email"
                 placeholder="e.g. d.kim@university.edu"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all"
               />
             </div>
             <button
@@ -1091,7 +1115,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
         {step === "academic" && (
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Department</label>
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Department</label>
               <select
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
@@ -1105,13 +1129,13 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
 
             {department === "Other" && (
               <div className="space-y-1.5 animate-slideDown">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Type Your Department</label>
+                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Type Your Department</label>
                 <input
                   type="text"
                   placeholder="e.g. Civil Engineering"
                   value={customDepartment}
                   onChange={(e) => setCustomDepartment(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-indigo-500 transition-all"
                 />
               </div>
             )}
@@ -1119,7 +1143,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
             <div className="flex space-x-3 pt-2">
               <button
                 onClick={() => setStep("details")}
-                className="w-1/3 bg-slate-850 hover:bg-slate-800 text-slate-300 text-sm font-bold py-2.5 rounded-xl transition-all cursor-pointer"
+                className="w-1/3 bg-slate-850 hover:bg-slate-800 text-slate-750 dark:text-slate-300 text-sm font-bold py-2.5 rounded-xl transition-all cursor-pointer"
               >
                 Back
               </button>
@@ -1137,8 +1161,8 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
         {step === "face" && (
           <div className="space-y-5 text-center">
             <div className="space-y-1.5">
-              <h3 className="text-sm font-bold text-slate-200">Face Recognition Scan</h3>
-              <p className="text-[11px] text-slate-400">Map your facial profile for secure checking-in validation</p>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Face Recognition Scan</h3>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400">Map your facial profile for secure checking-in validation</p>
             </div>
 
             {/* Circular Camera Scan View */}
@@ -1160,11 +1184,11 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
                 </div>
               ) : (
                 !webcamStream && (
-                  <div className="text-slate-500 flex flex-col items-center space-y-1.5 absolute z-10 bg-slate-950/90 inset-0 justify-center">
+                  <div className="text-slate-500 dark:text-slate-500 flex flex-col items-center space-y-1.5 absolute z-10 bg-slate-950/90 inset-0 justify-center">
                     <svg className="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Requesting Camera...</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Requesting Camera...</span>
                   </div>
                 )
               )}
@@ -1184,7 +1208,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
             <button
               onClick={() => setStep("academic")}
               disabled={isScanning}
-              className="text-xs font-semibold text-slate-500 hover:text-slate-300 disabled:opacity-50 cursor-pointer"
+              className="text-xs font-semibold text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 disabled:opacity-50 cursor-pointer"
             >
               Go Back
             </button>
@@ -1200,7 +1224,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
                   ⚠️
                 </div>
                 <div className="space-y-1.5">
-                  <h3 className="text-lg font-bold text-white">Database Sync Failed</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Database Sync Failed</h3>
                   <p className="text-xs text-rose-400 leading-relaxed">{onboardError}</p>
                 </div>
                 <button
@@ -1230,8 +1254,8 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
                 )}
 
                 <div className="space-y-1.5">
-                  <h3 className="text-lg font-bold text-white">Registration Ready!</h3>
-                  <p className="text-xs text-slate-400 font-medium">Verify your captured biometric profile photo. If it is blurry or misaligned, you can retake the scan before saving.</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Registration Ready!</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Verify your captured biometric profile photo. If it is blurry or misaligned, you can retake the scan before saving.</p>
                 </div>
 
                 <div className="flex gap-3">
@@ -1241,7 +1265,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ onComplete }) => 
                       setCapturedPhoto(null);
                     }}
                     disabled={isSubmittingOnboard}
-                    className="w-1/3 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 font-bold rounded-xl transition-all cursor-pointer disabled:opacity-50 text-sm"
+                    className="w-1/3 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-750 dark:text-slate-300 font-bold rounded-xl transition-all cursor-pointer disabled:opacity-50 text-sm"
                   >
                     Retake
                   </button>

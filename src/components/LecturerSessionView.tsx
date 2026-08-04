@@ -269,7 +269,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/40 flex items-center justify-center p-4">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-16 h-16 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin" />
-          <h2 className="text-xl font-bold text-slate-200">Loading Session Configuration...</h2>
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200">Loading Session Configuration...</h2>
         </div>
       </div>
     );
@@ -282,8 +282,8 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
           <svg className="w-16 h-16 text-rose-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          <h2 className="text-2xl font-bold text-white mb-2">Session Initialization Failed</h2>
-          <p className="text-sm text-slate-400 mb-6">{sessionError}</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Session Initialization Failed</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">{sessionError}</p>
           <button
             onClick={fetchSessionDetails}
             className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all active:scale-95 shadow-lg shadow-indigo-600/30"
@@ -311,7 +311,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/40 text-slate-100 flex flex-col font-sans">
       {/* Top Header Navigation */}
-      <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-slate-200 dark:border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
@@ -321,8 +321,8 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
                 </svg>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white tracking-tight">QR Attendance Console</h1>
-                <p className="text-xs text-slate-500 font-medium">Lecturer Portal</p>
+                <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">QR Attendance Console</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-500 font-medium">Lecturer Portal</p>
               </div>
             </div>
             
@@ -349,7 +349,7 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
             
             <div className="flex items-center space-x-2 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5">
               <span className={`w-2 h-2 rounded-full ${tokenError || rosterError ? "bg-rose-500 animate-ping" : "bg-emerald-500"}`} />
-              <span className="text-xs font-semibold text-slate-400">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
                 {tokenError || rosterError ? "Connection Disruptions" : "Systems Syncing"}
               </span>
             </div>
@@ -374,10 +374,10 @@ export const LecturerSessionView: React.FC<LecturerSessionViewProps> = ({
 
             {/* Check-Out Control Block (If session requires double signing) */}
             {session && session.requireDoubleSigning && (
-              <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-4">
+              <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl space-y-4">
                 <div>
-                  <h3 className="text-sm font-bold text-white">Double Signing Controls</h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Double Signing Controls</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                     This class session requires students to perform a check-out scan. Open check-out scanning towards the end of the class.
                   </p>
                 </div>
@@ -628,15 +628,15 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans flex items-center justify-center">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 p-4 md:p-8 font-sans transition-colors duration-300 flex items-center justify-center">
       <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-6">
         
         {/* Left Column: Course List */}
-        <div className="md:col-span-7 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+        <div className="md:col-span-7 bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-xl font-extrabold text-white tracking-tight">{lecturer?.name || "Dr. Elizabeth Vance"}</h2>
-              <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider font-mono">Lecturer Dashboard</p>
+              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">{lecturer?.name || "Dr. Elizabeth Vance"}</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-500 font-semibold uppercase tracking-wider font-mono">Lecturer Dashboard</p>
             </div>
             <button
               onClick={() => setShowAddCourse(!showAddCourse)}
@@ -648,10 +648,10 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
 
           {showAddCourse ? (
             <form onSubmit={handleAddCourse} className="space-y-4 border-t border-slate-850 pt-4 animate-slideDown">
-              <h3 className="text-sm font-bold text-slate-300">Register New Course</h3>
+              <h3 className="text-sm font-bold text-slate-750 dark:text-slate-300">Register New Course</h3>
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Code</label>
+                  <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">Code</label>
                   <input
                     type="text"
                     placeholder="e.g. CSE-402"
@@ -661,7 +661,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   />
                 </div>
                 <div className="col-span-2 space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Title</label>
+                  <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">Title</label>
                   <input
                     type="text"
                     placeholder="e.g. Distributed Systems"
@@ -673,7 +673,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase">Department</label>
+                <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">Department</label>
                 <select
                   value={newDept}
                   onChange={(e) => setNewDept(e.target.value)}
@@ -687,7 +687,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
 
               {newDept === "Other" && (
                 <div className="space-y-1 animate-slideDown">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase">Type Department</label>
+                  <label className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase">Type Department</label>
                   <input
                     type="text"
                     placeholder="e.g. Mechanical Engineering"
@@ -727,10 +727,10 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                     <span className="text-xs font-bold font-mono text-indigo-400 bg-indigo-600/10 border border-indigo-500/20 px-2 py-0.5 rounded-md">
                       {course.code}
                     </span>
-                    <h4 className="text-sm font-extrabold text-white mt-2 truncate group-hover:text-indigo-300 transition-colors">
+                    <h4 className="text-sm font-extrabold text-slate-900 dark:text-white mt-2 truncate group-hover:text-indigo-300 transition-colors">
                       {course.title}
                     </h4>
-                    <p className="text-[10px] text-slate-500 font-semibold mt-1 uppercase tracking-wider">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-500 font-semibold mt-1 uppercase tracking-wider">
                       {course.department}
                     </p>
                   </div>
@@ -738,7 +738,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                     <span className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${
                       selectedCourse?.id === course.id
                         ? "bg-indigo-600 text-white border-indigo-500"
-                        : "bg-slate-900 border-slate-800 text-slate-400 group-hover:text-slate-200"
+                        : "bg-slate-900 border-slate-800 text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:text-slate-200"
                     }`}>
                       ▶
                     </span>
@@ -750,13 +750,13 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
         </div>
 
         {/* Right Column: Session Setup */}
-        <div className="md:col-span-5 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
+        <div className="md:col-span-5 bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex flex-col justify-between space-y-6">
           {selectedCourse ? (
             <div className="space-y-5 flex-1 flex flex-col justify-between">
               <div className="space-y-4">
                 <div>
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-mono">Launching Session for</span>
-                  <h3 className="text-lg font-bold text-white leading-tight mt-1">{selectedCourse.title}</h3>
+                  <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest font-mono">Launching Session for</span>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-tight mt-1">{selectedCourse.title}</h3>
                   <p className="text-xs font-bold text-indigo-400 mt-0.5 font-mono">{selectedCourse.code}</p>
                 </div>
 
@@ -764,7 +764,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   {/* Custom Grace Period (Present) */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <label className="font-bold text-slate-400">Grace Period (Marked Present)</label>
+                      <label className="font-bold text-slate-600 dark:text-slate-400">Grace Period (Marked Present)</label>
                       <span className="font-bold font-mono text-indigo-400">{gracePeriod} mins</span>
                     </div>
                     <input
@@ -779,13 +779,13 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                       }}
                       className="w-full accent-indigo-500 bg-slate-950 rounded-lg cursor-pointer h-1.5"
                     />
-                    <p className="text-[10px] text-slate-500 leading-relaxed">Students checking in within this limit are marked <b>Present</b>.</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-500 leading-relaxed">Students checking in within this limit are marked <b>Present</b>.</p>
                   </div>
 
                   {/* Custom Late Period */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <label className="font-bold text-slate-400">Lateness Cutoff (Marked Late)</label>
+                      <label className="font-bold text-slate-600 dark:text-slate-400">Lateness Cutoff (Marked Late)</label>
                       <span className="font-bold font-mono text-indigo-400">{latePeriod} mins</span>
                     </div>
                     <input
@@ -796,13 +796,13 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                       onChange={(e) => setLatePeriod(parseInt(e.target.value))}
                       className="w-full accent-indigo-500 bg-slate-950 rounded-lg cursor-pointer h-1.5"
                     />
-                    <p className="text-[10px] text-slate-500 leading-relaxed">Students checking in after the grace period but within this limit are marked <b>Late</b>. Beyond this time, check-in closes completely.</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-500 leading-relaxed">Students checking in after the grace period but within this limit are marked <b>Late</b>. Beyond this time, check-in closes completely.</p>
                   </div>
 
                   {/* Geofence boundary radius */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-center text-xs">
-                      <label className="font-bold text-slate-400">Geofencing Radius</label>
+                      <label className="font-bold text-slate-600 dark:text-slate-400">Geofencing Radius</label>
                       <span className="font-bold font-mono text-indigo-400">{radius === 999999 ? "Disabled" : `${radius} meters`}</span>
                     </div>
                     <select
@@ -820,13 +820,13 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   {/* Room Location GPS */}
                   <div className="bg-slate-950 border border-slate-850 rounded-2xl p-4 flex items-center justify-between">
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold text-slate-500 uppercase font-mono">Classroom Coordinates</p>
+                      <p className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase font-mono">Classroom Coordinates</p>
                       {gps ? (
-                        <p className="text-xs font-mono font-bold text-slate-300 mt-1 truncate">
+                        <p className="text-xs font-mono font-bold text-slate-750 dark:text-slate-300 mt-1 truncate">
                           {gps.lat.toFixed(5)}°, {gps.lng.toFixed(5)}°
                         </p>
                       ) : (
-                        <p className="text-xs text-slate-500 mt-1 font-mono">Resolving coordinates...</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-500 mt-1 font-mono">Resolving coordinates...</p>
                       )}
                     </div>
                     <div className="flex-shrink-0">
@@ -844,8 +844,8 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   {/* Require Check-Out Toggle */}
                   <div className="bg-slate-950/60 border border-slate-850 rounded-2xl p-4 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-bold text-slate-300">Require Check-Out</p>
-                      <p className="text-[10px] text-slate-500 mt-0.5">Students must scan again at the end of class.</p>
+                      <p className="text-xs font-bold text-slate-750 dark:text-slate-300">Require Check-Out</p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-500 mt-0.5">Students must scan again at the end of class.</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input 
@@ -861,8 +861,8 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   {/* Expected Class Size */}
                   <div className="bg-slate-950/60 border border-slate-850 rounded-2xl p-4 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-bold text-slate-300">Expected Class Size</p>
-                      <p className="text-[10px] text-slate-500 mt-0.5 font-sans">Total number of students enrolled in this course.</p>
+                      <p className="text-xs font-bold text-slate-750 dark:text-slate-300">Expected Class Size</p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-500 mt-0.5 font-sans">Total number of students enrolled in this course.</p>
                     </div>
                     <input
                       type="number"
@@ -885,25 +885,25 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                 </button>
                 <button
                   onClick={() => handleLaunch(true)}
-                  className="w-full py-3 bg-slate-800 hover:bg-slate-750 text-slate-400 hover:text-slate-300 text-sm font-bold rounded-xl border border-slate-700/50 transition-all cursor-pointer"
+                  className="w-full py-3 bg-slate-800 hover:bg-slate-750 text-slate-600 dark:text-slate-400 hover:text-slate-750 dark:text-slate-300 text-sm font-bold rounded-xl border border-slate-700/50 transition-all cursor-pointer"
                 >
                   Start Demo Simulation (Test Run)
                 </button>
-                <p className="text-[10px] text-slate-500 text-center leading-relaxed">
+                <p className="text-[10px] text-slate-500 dark:text-slate-500 text-center leading-relaxed">
                   Use <b>Live Attendance</b> for actual students checking in via mobile. Use <b>Demo Simulation</b> for offline testing or project presentations.
                 </p>
               </div>
             </div>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-4">
-              <div className="w-16 h-16 rounded-3xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-500 shadow-xl shadow-slate-950/20">
+              <div className="w-16 h-16 rounded-3xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-500 shadow-xl shadow-slate-950/20">
                 <svg className="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
               <div className="space-y-1">
-                <h3 className="text-sm font-bold text-slate-200">No Course Selected</h3>
-                <p className="text-xs text-slate-400 max-w-xs leading-relaxed">Select one of your registered courses from the dashboard list to configure and initialize a live attendance session.</p>
+                <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">No Course Selected</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 max-w-xs leading-relaxed">Select one of your registered courses from the dashboard list to configure and initialize a live attendance session.</p>
               </div>
             </div>
           )}
