@@ -37,7 +37,7 @@ const CustomChartTooltip = ({ active, payload, label, valueSuffix = "" }: any) =
   if (active && payload && payload.length) {
     return (
       <div className="bg-slate-950/95 border border-slate-800 p-3 rounded-xl shadow-xl backdrop-blur-md">
-        <p className="text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">{label}</p>
+        <p className="text-xs font-bold text-slate-400 mb-1">{label}</p>
         {payload.map((entry: any, index: number) => (
           <p key={index} className="text-sm font-semibold text-white">
             <svg className="inline-block w-2.5 h-2.5 mr-2" viewBox="0 0 10 10">
@@ -128,7 +128,6 @@ export const AnalyticsDashboard: React.FC = () => {
   // 3. Roster of registered students loaded dynamically from database
   const [students, setStudents] = useState<StudentMetric[]>([]);
 
-
   const fetchStudents = useCallback(async () => {
     try {
       const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/students");
@@ -210,8 +209,8 @@ export const AnalyticsDashboard: React.FC = () => {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col p-4 md:p-8 font-sans space-y-8">
       {/* Title Header */}
       <div>
-        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Analytics & Reporting</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Class status metrics and attendance logs summary</p>
+        <h1 className="text-3xl font-extrabold text-white tracking-tight">Analytics & Reporting</h1>
+        <p className="text-sm text-slate-400 mt-1">Class status metrics and attendance logs summary</p>
       </div>
       {/* Tab Navigation */}
       <div className="flex border-b border-slate-800 space-x-6">
@@ -220,7 +219,7 @@ export const AnalyticsDashboard: React.FC = () => {
           className={`pb-3 text-sm font-bold transition-all cursor-pointer ${
             activeTab === "analytics"
               ? "text-indigo-400 border-b-2 border-indigo-500 font-extrabold"
-              : "text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300"
+              : "text-slate-500 hover:text-slate-300"
           }`}
         >
           Attendance Analytics
@@ -230,7 +229,7 @@ export const AnalyticsDashboard: React.FC = () => {
           className={`pb-3 text-sm font-bold transition-all cursor-pointer ${
             activeTab === "admin-mgmt"
               ? "text-indigo-400 border-b-2 border-indigo-500 font-extrabold"
-              : "text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300"
+              : "text-slate-500 hover:text-slate-300"
           }`}
         >
           Administrator Management
@@ -242,11 +241,11 @@ export const AnalyticsDashboard: React.FC = () => {
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Average Attendance Card */}
-        <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex items-center justify-between">
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest block">Average Attendance</span>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Average Attendance</span>
             <span className="text-4xl font-extrabold text-emerald-400 mt-2 block">{kpis.averageAttendance}%</span>
-            <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 mt-1 block">Across all active lectures</span>
+            <span className="text-[10px] font-semibold text-slate-400 mt-1 block">Across all active lectures</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,11 +255,11 @@ export const AnalyticsDashboard: React.FC = () => {
         </div>
 
         {/* Total Active Sessions Card */}
-        <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex items-center justify-between">
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest block">Total Sessions</span>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Total Sessions</span>
             <span className="text-4xl font-extrabold text-indigo-400 mt-2 block">{kpis.totalSessions}</span>
-            <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 mt-1 block">Scheduled semester classes</span>
+            <span className="text-[10px] font-semibold text-slate-400 mt-1 block">Scheduled semester classes</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -270,11 +269,11 @@ export const AnalyticsDashboard: React.FC = () => {
         </div>
 
         {/* Students Below Threshold Card */}
-        <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex items-center justify-between">
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest block">At-Risk Students</span>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">At-Risk Students</span>
             <span className="text-4xl font-extrabold text-rose-500 mt-2 block">{kpis.atRiskCount}</span>
-            <span className="text-[10px] font-semibold text-slate-600 dark:text-slate-400 mt-1 block">Below the 70% critical limit</span>
+            <span className="text-[10px] font-semibold text-slate-400 mt-1 block">Below the 70% critical limit</span>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,10 +288,10 @@ export const AnalyticsDashboard: React.FC = () => {
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Historical Weekly Attendance (Bar Chart) */}
-        <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex flex-col">
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col">
           <div className="mb-4">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Historical Weekly Attendance</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-500 mt-0.5">Average weekly attendance rate percentages</p>
+            <h3 className="text-lg font-bold text-white">Historical Weekly Attendance</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Average weekly attendance rate percentages</p>
           </div>
           
           <div className="w-full h-72">
@@ -309,10 +308,10 @@ export const AnalyticsDashboard: React.FC = () => {
         </div>
 
         {/* Student Arrival Distribution (Line Chart) */}
-        <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex flex-col">
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col">
           <div className="mb-4">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Arrival Time Distribution</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-500 mt-0.5">Tardiness trend showing check-in timing relative to start time</p>
+            <h3 className="text-lg font-bold text-white">Arrival Time Distribution</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Tardiness trend showing check-in timing relative to start time</p>
           </div>
           
           <div className="w-full h-72">
@@ -339,11 +338,11 @@ export const AnalyticsDashboard: React.FC = () => {
       </section>
 
       {/* 3. PAGINATED STUDENT ROSTER TABLE */}
-      <section className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl flex flex-col">
+      <section className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Academic Roster</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-500 mt-0.5">Full class list sorting and critical status warnings</p>
+            <h3 className="text-xl font-bold text-white">Academic Roster</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Full class list sorting and critical status warnings</p>
           </div>
           <div className="flex items-center space-x-2">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500/20 border border-rose-500/30 block" />
@@ -355,7 +354,7 @@ export const AnalyticsDashboard: React.FC = () => {
         <div className="overflow-x-auto min-h-[360px]">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-500 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider">
+              <tr className="border-b border-slate-800 text-slate-500 text-xs font-semibold uppercase tracking-wider">
                 <th
                   onClick={() => handleSort("name")}
                   className="pb-3 cursor-pointer hover:text-white select-none transition-colors"
@@ -390,7 +389,7 @@ export const AnalyticsDashboard: React.FC = () => {
                     className={`transition-colors duration-200 ${
                       isCritical
                         ? "bg-rose-950/10 hover:bg-rose-950/20 text-rose-100"
-                        : "hover:bg-slate-900/40 text-slate-800 dark:text-slate-200"
+                        : "hover:bg-slate-900/40 text-slate-200"
                     }`}
                   >
                     {/* User profile details */}
@@ -405,17 +404,17 @@ export const AnalyticsDashboard: React.FC = () => {
                         </div>
                         <div>
                           <p className="font-semibold">{student.name}</p>
-                          <p className="text-slate-500 dark:text-slate-500 text-[10px] font-medium font-mono">{student.email}</p>
+                          <p className="text-slate-500 text-[10px] font-medium font-mono">{student.email}</p>
                         </div>
                       </div>
                     </td>
 
                     {/* ID */}
-                    <td className="py-4 font-mono text-xs text-slate-600 dark:text-slate-400">{student.studentId}</td>
+                    <td className="py-4 font-mono text-xs text-slate-400">{student.studentId}</td>
 
                     {/* Attended Counts */}
                     <td className="py-4 font-medium">
-                      {student.attendedClasses} <span className="text-slate-500 dark:text-slate-500 font-normal">/ {student.totalClasses}</span>
+                      {student.attendedClasses} <span className="text-slate-500 font-normal">/ {student.totalClasses}</span>
                     </td>
 
                     {/* Percent Rate */}
@@ -446,7 +445,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
         {/* 4. TABLE PAGINATION CONTROLS */}
         <div className="flex items-center justify-between pt-6 border-t border-slate-800/80 mt-4">
-          <span className="text-xs text-slate-500 dark:text-slate-500 font-medium">
+          <span className="text-xs text-slate-500 font-medium">
             Page {currentPage} of {processedStudents.totalPages}
           </span>
           
@@ -454,14 +453,14 @@ export const AnalyticsDashboard: React.FC = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-650 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white disabled:opacity-40 disabled:hover:text-slate-600 dark:text-slate-400 active:scale-95 transition-all"
+              className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 disabled:hover:text-slate-400 active:scale-95 transition-all"
             >
               Previous
             </button>
             <button
               onClick={() => setCurrentPage((p) => Math.min(processedStudents.totalPages, p + 1))}
               disabled={currentPage === processedStudents.totalPages}
-              className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-650 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white disabled:opacity-40 disabled:hover:text-slate-600 dark:text-slate-400 active:scale-95 transition-all"
+              className="px-3.5 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-semibold text-slate-400 hover:text-white disabled:opacity-40 disabled:hover:text-slate-400 active:scale-95 transition-all"
             >
               Next
             </button>
@@ -474,10 +473,10 @@ export const AnalyticsDashboard: React.FC = () => {
 
       {/* 4. ADMIN USER REGISTRATION FORM */}
       {activeTab === "admin-mgmt" && (
-        <section className="max-w-md w-full bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-md dark:shadow-2xl space-y-6 mx-auto animate-fadeIn text-left mt-8">
+        <section className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6 mx-auto animate-fadeIn text-left mt-8">
           <div className="space-y-1.5 text-center">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Register New Administrator</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400">Create login credentials for institutional colleagues (e.g. the Dean)</p>
+            <h3 className="text-xl font-bold text-white tracking-tight">Register New Administrator</h3>
+            <p className="text-xs text-slate-400">Create login credentials for institutional colleagues (e.g. the Dean)</p>
           </div>
 
           {registerSuccess && (
@@ -494,7 +493,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
           <form onSubmit={handleRegisterAdminSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Full Name</label>
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name</label>
               <input
                 type="text"
                 placeholder="e.g. Dean of Faculty"
@@ -506,7 +505,7 @@ export const AnalyticsDashboard: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Admin Email</label>
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Admin Email</label>
               <input
                 type="email"
                 placeholder="e.g. dean.engineering@university.edu"
@@ -518,7 +517,7 @@ export const AnalyticsDashboard: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Create Password</label>
+              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Create Password</label>
               <div className="relative">
                 <input
                   type={showNewAdminPwd ? "text" : "password"}
@@ -531,7 +530,7 @@ export const AnalyticsDashboard: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowNewAdminPwd(!showNewAdminPwd)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-500 hover:text-slate-750 dark:text-slate-300 cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
                   title={showNewAdminPwd ? "Hide Password" : "Show Password"}
                 >
                   {showNewAdminPwd ? (
