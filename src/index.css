@@ -179,3 +179,69 @@ input::-webkit-credentials-auto-fill-button {
   right: 0;
 }
 
+
+/* ==========================================================================
+   ENHANCED LIGHT MODE COMPATIBILITY INJECTS
+   ========================================================================== */
+
+/* Overrides for transparent overlays to off-whites (fixes dark-on-dark text) */
+.light .bg-slate-950\/95,
+.light .bg-slate-950\/90,
+.light .bg-slate-950\/80,
+.light .bg-slate-950\/60,
+.light .bg-slate-950\/40,
+.light .bg-slate-950\/20,
+.light .bg-slate-950\/10 {
+  background-color: rgba(248, 250, 252, 0.95) !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* Semi-transparent dark overlay backdrop for active confirmation modals */
+.light .fixed.inset-0.bg-slate-950\/80 {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* Keep button labels high-contrast white in light mode */
+.light .bg-indigo-650,
+.light .bg-indigo-600,
+.light .bg-indigo-500,
+.light .bg-emerald-600,
+.light .bg-emerald-500,
+.light .bg-rose-600,
+.light .bg-rose-500,
+.light .text-white-force {
+  color: #ffffff !important;
+}
+
+.light .bg-indigo-600:hover,
+.light .bg-indigo-500:hover,
+.light .bg-emerald-600:hover,
+.light .bg-emerald-500:hover,
+.light .bg-rose-600:hover,
+.light .bg-rose-500:hover {
+  color: #ffffff !important;
+}
+
+/* Dynamic Hover Color Transitions on Landing Hub Cards */
+.light .group:hover .group-hover\:text-indigo-400 {
+  color: #4f46e5 !important;
+}
+.light .group:hover .group-hover\:text-emerald-400 {
+  color: #059669 !important;
+}
+.light .group:hover .group-hover\:text-rose-400 {
+  color: #dc2626 !important;
+}
+.light .group:hover .text-indigo-400 {
+  color: #ffffff !important;
+}
+.light .group:hover .text-emerald-400 {
+  color: #ffffff !important;
+}
+.light .group:hover .text-rose-400 {
+  color: #ffffff !important;
+}
+
+
