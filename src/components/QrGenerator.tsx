@@ -19,19 +19,7 @@ export const QrGenerator: React.FC<QrGeneratorProps> = ({
   tokenError,
   onRefresh,
 }) => {
-  // SVG Progress Ring calculations
-  const radius = 36;
-  const stroke = 6;
-  const normalizedRadius = radius - stroke * 2;
-  const circumference = normalizedRadius * 2 * Math.PI; // ~150.8
-  const strokeDashoffset = circumference - (secondsLeft / 15) * circumference;
 
-  // Determine progress color indicator based on remaining time
-  const getProgressColor = () => {
-    if (secondsLeft > 10) return "stroke-emerald-400";
-    if (secondsLeft > 4) return "stroke-amber-400";
-    return "stroke-rose-500 animate-pulse";
-  };
 
   // Format session date range nicely
   const formatSessionTime = (startStr: string, endStr: string) => {
@@ -130,40 +118,16 @@ export const QrGenerator: React.FC<QrGeneratorProps> = ({
               />
             </div>
             
+            {/* Centered high-contrast countdown indicator */}
+            <div className="flex items-center space-x-2 bg-slate-900/90 border border-slate-800/60 rounded-full px-4 py-2 shadow-lg z-10">
+              <span className={`w-2.5 h-2.5 rounded-full ${secondsLeft > 5 ? "bg-emerald-400" : "bg-rose-500"} animate-pulse`} />
+              <span className="text-xs font-bold text-slate-300">Next code rotation:</span>
+              <span className="text-xs font-extrabold text-indigo-400 font-mono">{secondsLeft}s</span>
+            </div>
+            
             <p className="text-xs font-medium text-slate-400 text-center tracking-wide">
               Scan this dynamic QR code to log attendance
             </p>
-          </div>
-        )}
-
-        {/* Floating Ring Countdown */}
-        {token && !tokenError && (
-          <div className="absolute top-4 right-4 flex items-center justify-center">
-            <svg className="w-16 h-16 transform -rotate-90">
-              <circle
-                className="text-slate-800"
-                strokeWidth={stroke}
-                stroke="currentColor"
-                fill="transparent"
-                r={normalizedRadius}
-                cx="32"
-                cy="32"
-              />
-              <circle
-                className={`transition-all duration-1000 ease-linear ${getProgressColor()}`}
-                strokeWidth={stroke}
-                strokeDasharray={`${circumference} ${circumference}`}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                fill="transparent"
-                r={normalizedRadius}
-                cx="32"
-                cy="32"
-              />
-            </svg>
-            <span className="absolute text-sm font-bold text-white tracking-tighter">
-              {secondsLeft}s
-            </span>
           </div>
         )}
       </div>
