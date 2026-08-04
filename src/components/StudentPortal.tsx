@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 
 interface StudentProfile {
@@ -71,31 +71,35 @@ export const StudentPortal: React.FC = () => {
 
   const [recentHistory, setRecentHistory] = useState<RecentCheckIn[]>([]);
 
-  // Calculate course-by-course attendance rates dynamically
-  const coursesAttendance = useMemo(() => {
-    const defaultCourses = [
-      { code: "CSE-402", title: "Distributed Systems & Cloud Computing" },
-      { code: "CSE-408", title: "Artificial Intelligence & Robotics" },
-      { code: "CSE-301", title: "Database Management Systems" },
-    ];
-    return defaultCourses.map(c => {
-      const attended = recentHistory.filter(h => h.courseCode === c.code).length;
-      let total = 0;
-      if (attended > 0) {
-        if (c.code === "CSE-402") total = 5;
-        else if (c.code === "CSE-408") total = 4;
-        else if (c.code === "CSE-301") total = 3;
-        if (total < attended) total = attended;
+  // Calculate course-by-course attendance rates dynamically from database
+  const [coursesAttendance, setCoursesAttendance] = useState<any[]>([
+    { code: "CSE-402", title: "Distributed Systems & Cloud Computing", attended: 0, total: 0, percentage: 100 },
+    { code: "CSE-408", title: "Artificial Intelligence & Robotics", attended: 0, total: 0, percentage: 100 },
+    { code: "CSE-301", title: "Database Management Systems", attended: 0, total: 0, percentage: 100 }
+  ]);
+  const fetchAttendanceSummary = useCallback(async () => {
+    if (!profile || !profile.dbId) return;
+    try {
+      const res = await fetch(`https://attendance-system-backend-b6ti.onrender.com/api/v1/students/${profile.dbId}/attendance-summary`);
+      if (res.ok) {
+        const data = await res.json();
+        const mapped = data.map((item: any) => ({
+          code: item.course_code,
+          title: item.course_title,
+          attended: item.attended,
+          total: item.total,
+          percentage: item.percentage
+        }));
+        setCoursesAttendance(mapped);
       }
-      const pct = total > 0 ? Math.round((attended / total) * 100) : 100;
-      return {
-        ...c,
-        attended,
-        total,
-        percentage: pct,
-      };
-    });
-  }, [recentHistory]);
+    } catch (err) {
+      console.error("Failed to fetch attendance summary:", err);
+    }
+  }, [profile?.dbId]);
+
+  useEffect(() => {
+    fetchAttendanceSummary();
+  }, [recentHistory, fetchAttendanceSummary]);
 
   // --- STATE CONFIGURATION ---
   const [showScanner, setShowScanner] = useState<boolean>(false);
