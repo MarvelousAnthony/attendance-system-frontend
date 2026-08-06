@@ -802,9 +802,11 @@ export const StudentPortal: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-3 flex-shrink-0 pl-3">
                     <span className="text-[10px] font-mono text-slate-400">
-                      {new Date(item.timestamp).toLocaleDateString([], {
+                      {new Date(item.timestamp).toLocaleString([], {
                         month: "short",
                         day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
                       })}
                     </span>
                     {item.status === "present" ? (
