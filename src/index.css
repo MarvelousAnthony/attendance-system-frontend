@@ -249,26 +249,43 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, p, span, div {
 }
 
 /* Dynamic Hover Color Transitions on Landing Hub Cards */
+.light .text-indigo-400 {
+  color: #4f46e5 !important;
+}
+.light .text-emerald-400 {
+  color: #059669 !important;
+}
+.light .text-rose-400 {
+  color: #dc2626 !important;
+}
+
 .light .group:hover .group-hover\:text-indigo-300,
-.light .group:hover .group-hover\:text-indigo-400 {
+.light .group:hover .group-hover\:text-indigo-400,
+.light .group:hover .text-indigo-400 {
   color: #3730a3 !important;
 }
 .light .group:hover .group-hover\:text-emerald-300,
-.light .group:hover .group-hover\:text-emerald-400 {
+.light .group:hover .group-hover\:text-emerald-400,
+.light .group:hover .text-emerald-400 {
   color: #065f46 !important;
 }
 .light .group:hover .group-hover\:text-rose-300,
-.light .group:hover .group-hover\:text-rose-400 {
+.light .group:hover .group-hover\:text-rose-400,
+.light .group:hover .text-rose-400 {
   color: #9f1239 !important;
 }
-.light .group:hover .text-indigo-400 {
-  color: #ffffff !important;
-}
-.light .group:hover .text-emerald-400 {
-  color: #ffffff !important;
-}
-.light .group:hover .text-rose-400 {
-  color: #ffffff !important;
-}
 
-
+/* High-contrast Secondary Buttons (e.g. Cancel / No stay) */
+.light .bg-slate-950.border-slate-800 {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+.light .bg-slate-950.border-slate-800 * {
+  color: #1e293b !important;
+}
+.light .bg-slate-950.border-slate-800:hover,
+.light .bg-slate-950.border-slate-800:hover * {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
