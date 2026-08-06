@@ -311,7 +311,7 @@ export const AnalyticsDashboard: React.FC = () => {
               <BarChart data={weeklyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
                 <XAxis dataKey="week" stroke="#64748b" fontSize={11} tickLine={false} />
-                <YAxis domain={[50, 100]} stroke="#64748b" fontSize={11} tickLine={false} />
+                <YAxis domain={[0, 100]} stroke="#64748b" fontSize={11} tickLine={false} />
                 <Tooltip content={<CustomChartTooltip valueSuffix="%" />} cursor={{ fill: "#1e293b", opacity: 0.4 }} />
                 <Bar dataKey="rate" name="Attendance Rate" fill="#6366f1" radius={[6, 6, 0, 0]} maxBarSize={38} />
               </BarChart>
