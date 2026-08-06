@@ -435,6 +435,58 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
   const [selectedCourse, setSelectedCourse] = useState<CourseItem | null>(null);
   const [totalStudents, setTotalStudents] = useState<number>(45);
 
+  // Past sessions history state
+  const [pastSessions, setPastSessions] = useState<any[]>([]);
+  const [isPastSessionsLoading, setIsPastSessionsLoading] = useState<boolean>(false);
+  const [selectedPastSession, setSelectedPastSession] = useState<any | null>(null);
+  const [pastRosterRecords, setPastRosterRecords] = useState<any[]>([]);
+  const [isPastRosterLoading, setIsPastRosterLoading] = useState<boolean>(false);
+
+  const fetchPastSessions = useCallback(async (courseId: string) => {
+    setIsPastSessionsLoading(true);
+    try {
+      const res = await fetch(`https://attendance-system-backend-b6ti.onrender.com/api/v1/courses/${courseId}/sessions`);
+      if (res.ok) {
+        const data = await res.json();
+        setPastSessions(data);
+      }
+    } catch (err) {
+      console.error("Failed to load past sessions:", err);
+    } finally {
+      setIsPastSessionsLoading(false);
+    }
+  }, []);
+
+  const fetchAndShowPastRoster = useCallback(async (sessionLog: any) => {
+    setSelectedPastSession(sessionLog);
+    setIsPastRosterLoading(true);
+    try {
+      const res = await fetch(`https://attendance-system-backend-b6ti.onrender.com/api/v1/sessions/${sessionLog.id}/attendance`);
+      if (res.ok) {
+        const data = await res.json();
+        const mapped = data.map((item: any) => ({
+          id: item.id,
+          studentId: item.student_matric_no || item.student_id,
+          studentName: item.student_name,
+          timestamp: item.timestamp,
+          status: item.status,
+          deviceHash: item.device_hash || "unknown"
+        }));
+        setPastRosterRecords(mapped);
+      }
+    } catch (err) {
+      console.error("Failed to fetch past roster:", err);
+    } finally {
+      setIsPastRosterLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedCourse) {
+      fetchPastSessions(selectedCourse.id);
+    }
+  }, [selectedCourse, fetchPastSessions]);
+
   useEffect(() => {
     const fetchCourses = async () => {
       setIsLoadingCourses(true);
@@ -752,7 +804,8 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
         {/* Right Column: Session Setup */}
         <div className="md:col-span-5 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
           {selectedCourse ? (
-            <div className="space-y-5 flex-1 flex flex-col justify-between">
+            <>
+              <div className="space-y-5 flex-1 flex flex-col justify-between">
               <div className="space-y-4">
                 <div>
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-mono">Launching Session for</span>
@@ -894,6 +947,48 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                 </p>
               </div>
             </div>
+
+            {/* PAST SESSIONS HISTORY CARD */}
+            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-white tracking-tight">Past Session Audits</h3>
+                <span className="text-[10px] font-bold text-slate-500 font-mono uppercase tracking-wider">History Logs</span>
+              </div>
+              
+              {isPastSessionsLoading ? (
+                <div className="text-xs text-slate-550 text-center py-6">Loading past sessions...</div>
+              ) : pastSessions.length === 0 ? (
+                <div className="text-xs text-slate-550 text-center py-6">No past sessions found for this course.</div>
+              ) : (
+                <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                  {pastSessions.map((ps) => (
+                    <div 
+                      key={ps.id}
+                      onClick={() => fetchAndShowPastRoster(ps)}
+                      className="p-3 bg-slate-950/40 border border-slate-900 hover:border-slate-800 rounded-2xl flex items-center justify-between cursor-pointer transition-all hover:bg-slate-950/70"
+                    >
+                      <div>
+                        <p className="text-xs font-semibold text-white">
+                          {new Date(ps.start_time).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </p>
+                        <p className="text-[10px] text-slate-500 mt-0.5 font-mono">
+                          {new Date(ps.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs font-bold text-indigo-400">
+                          {ps.total_checkins} Students
+                        </span>
+                        <p className="text-[9px] text-slate-550 mt-0.5">
+                          {ps.present_count} Present / {ps.late_count} Late
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6 space-y-4">
               <div className="w-16 h-16 rounded-3xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-500 shadow-xl shadow-slate-950/20">
@@ -910,6 +1005,85 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
         </div>
 
       </div>
+
+      {/* PAST ROSTER DIALOG MODAL */}
+      {selectedPastSession && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl flex flex-col space-y-4 max-h-[90vh]">
+            <div className="flex items-center justify-between border-b border-slate-850 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-white">
+                  Roster Audit: {selectedCourse?.code}
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  {new Date(selectedPastSession.start_time).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })} at {new Date(selectedPastSession.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedPastSession(null);
+                  setPastRosterRecords([]);
+                }}
+                className="px-3 py-1.5 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
+              >
+                Close Audit
+              </button>
+            </div>
+
+            {isPastRosterLoading ? (
+              <div className="flex-1 flex flex-col items-center justify-center py-12 space-y-2">
+                <div className="w-8 h-8 rounded-full border-2 border-indigo-500/20 border-t-indigo-500 animate-spin" />
+                <p className="text-xs text-slate-500">Retrieving check-in logs...</p>
+              </div>
+            ) : pastRosterRecords.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center py-12 text-xs text-slate-550">
+                No students checked into this session.
+              </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto pr-1">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="text-slate-500 font-bold border-b border-slate-850 pb-2">
+                      <th className="pb-2">Student Name</th>
+                      <th className="pb-2">Matric No</th>
+                      <th className="pb-2">Check-in Time</th>
+                      <th className="pb-2">Device Hash</th>
+                      <th className="pb-2 text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-850/60">
+                    {pastRosterRecords.map((r) => (
+                      <tr key={r.id} className="text-slate-200">
+                        <td className="py-2.5 font-medium text-white">{r.studentName}</td>
+                        <td className="py-2.5 font-mono text-slate-400">{r.studentId}</td>
+                        <td className="py-2.5 font-mono text-slate-400">
+                          {new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </td>
+                        <td className="py-2.5 font-mono text-slate-500">{r.deviceHash.slice(0, 8)}...</td>
+                        <td className="py-2.5 text-right">
+                          <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            r.status === "present"
+                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                              : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                          }`}>
+                            {r.status === "present" ? "Present" : "Late"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            
+            <div className="border-t border-slate-850 pt-3 flex justify-between text-[10px] text-slate-500 font-medium">
+              <span>Total present: {selectedPastSession.present_count}</span>
+              <span>Total late: {selectedPastSession.late_count}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
