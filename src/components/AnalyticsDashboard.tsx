@@ -99,32 +99,13 @@ export const AnalyticsDashboard: React.FC = () => {
     }
   };
 
-  // --- MOCK DATABASE METRICS ---
+  // --- DYNAMIC DATABASE METRICS ---
 
   // 1. Weekly Historical Rate (last 8 weeks)
-  const weeklyData: WeeklyAttendance[] = [
-    { week: "Week 1", rate: 82.4 },
-    { week: "Week 2", rate: 84.1 },
-    { week: "Week 3", rate: 86.8 },
-    { week: "Week 4", rate: 85.3 },
-    { week: "Week 5", rate: 89.2 },
-    { week: "Week 6", rate: 91.5 },
-    { week: "Week 7", rate: 88.7 },
-    { week: "Week 8", rate: 90.9 },
-  ];
+  const [weeklyData, setWeeklyData] = useState<WeeklyAttendance[]>([]);
 
   // 2. Arrival Distribution Curve (offset minutes from session start time)
-  const arrivalData: ArrivalTrend[] = [
-    { timeOffset: "-10m", students: 3 },
-    { timeOffset: "-5m", students: 9 },
-    { timeOffset: "0m", students: 16 },
-    { timeOffset: "5m", students: 12 },
-    { timeOffset: "10m", students: 7 }, // Late threshold marker
-    { timeOffset: "15m", students: 4 },
-    { timeOffset: "20m", students: 2 },
-    { timeOffset: "25m", students: 1 },
-    { timeOffset: "30m", students: 1 },
-  ];
+  const [arrivalData, setArrivalData] = useState<ArrivalTrend[]>([]);
 
   // 3. Roster of registered students loaded dynamically from database
   const [students, setStudents] = useState<StudentMetric[]>([]);
@@ -168,7 +149,22 @@ export const AnalyticsDashboard: React.FC = () => {
         console.error("Failed to fetch sessions count:", err);
       }
     };
+
+    const fetchChartData = async () => {
+      try {
+        const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/attendance/analytics");
+        if (res.ok) {
+          const data = await res.json();
+          setWeeklyData(data.weekly_attendance);
+          setArrivalData(data.arrival_distribution);
+        }
+      } catch (err) {
+        console.error("Failed to fetch chart analytics data:", err);
+      }
+    };
+
     fetchSessionsCount();
+    fetchChartData();
   }, [fetchStudents]);
 
   // --- STATE FOR PAGINATION AND SORTING ---
