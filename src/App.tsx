@@ -140,7 +140,7 @@ export const App: React.FC = () => {
           <div className="absolute top-4 right-4">
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 flex items-center space-x-1.5 transition-all shadow-md shadow-black/10"
+              className="theme-toggle-btn px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 flex items-center space-x-1.5 transition-all shadow-md shadow-black/10"
             >
               <span>{theme === "dark" ? "☀️" : "🌙"}</span>
               <span>{theme === "dark" ? "Light Theme" : "Dark Theme"}</span>
@@ -244,7 +244,7 @@ export const App: React.FC = () => {
           <div className="absolute top-4 right-4">
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
+              className="theme-toggle-btn px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
             >
               {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
             </button>
@@ -456,7 +456,7 @@ export const App: React.FC = () => {
           <div className="absolute top-4 right-4">
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
+              className="theme-toggle-btn px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold hover:text-white cursor-pointer hover:border-slate-700 transition-all"
             >
               {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
             </button>
@@ -552,7 +552,7 @@ export const App: React.FC = () => {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer"
+              className="theme-toggle-btn px-3 py-1.5 bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer"
             >
               {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
             </button>

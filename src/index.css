@@ -313,3 +313,21 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, p, span, div {
   background-color: #f1f5f9 !important;
   color: #0f172a !important;
 }
+
+/* Premium Theme Toggle Button in Light Mode */
+.light .theme-toggle-btn {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+.light .theme-toggle-btn:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+.light .theme-toggle-btn * {
+  color: #1e293b !important;
+}
+.light .theme-toggle-btn:hover * {
+  color: #0f172a !important;
+}
