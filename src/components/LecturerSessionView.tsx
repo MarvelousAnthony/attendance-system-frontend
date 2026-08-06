@@ -477,6 +477,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
             studentId: item.student_matric_no || item.student_id,
             studentName: item.student_name,
             timestamp: item.timestamp,
+            checkedOutAt: item.checked_out_at,
             status: item.status,
             deviceHash: item.device_hash || "unknown"
           };
@@ -489,6 +490,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
             studentId: s.student_id,
             studentName: s.name,
             timestamp: null,
+            checkedOutAt: null,
             status: "absent",
             deviceHash: "N/A"
           }));
@@ -972,7 +974,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
             {/* PAST SESSIONS HISTORY CARD */}
             <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white tracking-tight">Past Session Audits</h3>
+                <h3 className="text-sm font-bold text-white tracking-tight">Past Attendance Logs</h3>
                 <button
                   onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
                   className="px-2.5 py-1 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center space-x-1"
@@ -1039,7 +1041,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
             <div className="flex items-center justify-between border-b border-slate-850 pb-3">
               <div>
                 <h3 className="text-base font-bold text-white">
-                  Roster Audit: {selectedCourse?.code}
+                  Session Details: {selectedCourse?.code}
                 </h3>
                 <p className="text-xs text-slate-500 font-medium">
                   {new Date(selectedPastSession.start_time).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })} at {new Date(selectedPastSession.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -1052,7 +1054,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                 }}
                 className="px-3 py-1.5 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition-all cursor-pointer"
               >
-                Close Audit
+                Close Records
               </button>
             </div>
 
@@ -1072,7 +1074,8 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                     <tr className="text-slate-500 font-bold border-b border-slate-850 pb-2">
                       <th className="pb-2">Student Name</th>
                       <th className="pb-2">Matric No</th>
-                      <th className="pb-2">Check-in Time</th>
+                      <th className="pb-2">Check-in</th>
+                      {selectedPastSession.require_double_signing && <th className="pb-2">Check-out</th>}
                       <th className="pb-2">Device Hash</th>
                       <th className="pb-2 text-right">Status</th>
                     </tr>
@@ -1085,6 +1088,11 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                         <td className="py-2.5 font-mono text-slate-400">
                           {r.timestamp ? new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—"}
                         </td>
+                        {selectedPastSession.require_double_signing && (
+                          <td className="py-2.5 font-mono text-slate-400">
+                            {r.checkedOutAt ? new Date(r.checkedOutAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—"}
+                          </td>
+                        )}
                         <td className="py-2.5 font-mono text-slate-500">
                           {r.deviceHash !== "N/A" ? `${r.deviceHash.slice(0, 8)}...` : "—"}
                         </td>
