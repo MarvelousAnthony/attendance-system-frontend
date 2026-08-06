@@ -17,6 +17,7 @@ interface StudentMetric {
   name: string;
   email: string;
   studentId: string;
+  department?: string;
   attendedClasses: number;
   totalClasses: number;
   percentage: number;
@@ -138,6 +139,7 @@ export const AnalyticsDashboard: React.FC = () => {
           name: item.name,
           email: item.email,
           studentId: item.student_id || "N/A",
+          department: item.department || "Computer Science",
           attendedClasses: item.attended || 0,
           totalClasses: item.total || 0,
           percentage: item.percentage || 100.0,
@@ -363,6 +365,7 @@ export const AnalyticsDashboard: React.FC = () => {
                   {sortField === "name" && (sortOrder === "asc" ? "▲" : "▼")}
                 </th>
                 <th className="pb-3">Student ID</th>
+                <th className="pb-3">Department</th>
                 <th
                   onClick={() => handleSort("attendedClasses")}
                   className="pb-3 cursor-pointer hover:text-white select-none transition-colors"
@@ -411,6 +414,9 @@ export const AnalyticsDashboard: React.FC = () => {
 
                     {/* ID */}
                     <td className="py-4 font-mono text-xs text-slate-400">{student.studentId}</td>
+
+                    {/* Department */}
+                    <td className="py-4 text-xs font-semibold text-slate-450">{student.department || "Computer Science"}</td>
 
                     {/* Attended Counts */}
                     <td className="py-4 font-medium">
