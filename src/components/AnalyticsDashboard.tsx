@@ -128,6 +128,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
   // 3. Roster of registered students loaded dynamically from database
   const [students, setStudents] = useState<StudentMetric[]>([]);
+  const [totalSessionsCount, setTotalSessionsCount] = useState<number>(0);
 
   const fetchStudents = useCallback(async () => {
     try {
@@ -155,6 +156,19 @@ export const AnalyticsDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchStudents();
+
+    const fetchSessionsCount = async () => {
+      try {
+        const res = await fetch("https://attendance-system-backend-b6ti.onrender.com/api/v1/sessions");
+        if (res.ok) {
+          const data = await res.json();
+          setTotalSessionsCount(data.length);
+        }
+      } catch (err) {
+        console.error("Failed to fetch sessions count:", err);
+      }
+    };
+    fetchSessionsCount();
   }, [fetchStudents]);
 
   // --- STATE FOR PAGINATION AND SORTING ---
@@ -171,7 +185,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
     return {
       averageAttendance,
-      totalSessions: students.length > 0 ? 30 : 0,
+      totalSessions: totalSessionsCount,
       atRiskCount,
     };
   }, [students]);
