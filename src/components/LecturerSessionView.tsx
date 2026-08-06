@@ -436,6 +436,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
   const [totalStudents, setTotalStudents] = useState<number>(45);
 
   // Past sessions history state
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState<boolean>(false);
   const [pastSessions, setPastSessions] = useState<any[]>([]);
   const [isPastSessionsLoading, setIsPastSessionsLoading] = useState<boolean>(false);
   const [selectedPastSession, setSelectedPastSession] = useState<any | null>(null);
@@ -461,18 +462,38 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
     setSelectedPastSession(sessionLog);
     setIsPastRosterLoading(true);
     try {
-      const res = await fetch(`https://attendance-system-backend-b6ti.onrender.com/api/v1/sessions/${sessionLog.id}/attendance`);
-      if (res.ok) {
-        const data = await res.json();
-        const mapped = data.map((item: any) => ({
-          id: item.id,
-          studentId: item.student_matric_no || item.student_id,
-          studentName: item.student_name,
-          timestamp: item.timestamp,
-          status: item.status,
-          deviceHash: item.device_hash || "unknown"
-        }));
-        setPastRosterRecords(mapped);
+      const attendanceRes = await fetch(`https://attendance-system-backend-b6ti.onrender.com/api/v1/sessions/${sessionLog.id}/attendance`);
+      const studentRes = await fetch(`https://attendance-system-backend-b6ti.onrender.com/api/v1/students`);
+      
+      if (attendanceRes.ok && studentRes.ok) {
+        const attendanceData = await attendanceRes.json();
+        const studentData = await studentRes.json();
+        
+        const checkedInMap = new Map();
+        const checkedInRecords = attendanceData.map((item: any) => {
+          checkedInMap.set(item.student_matric_no || item.student_id, true);
+          return {
+            id: item.id,
+            studentId: item.student_matric_no || item.student_id,
+            studentName: item.student_name,
+            timestamp: item.timestamp,
+            status: item.status,
+            deviceHash: item.device_hash || "unknown"
+          };
+        });
+        
+        const absentRecords = studentData
+          .filter((s: any) => !checkedInMap.has(s.student_id))
+          .map((s: any) => ({
+            id: `absent-${s.id}`,
+            studentId: s.student_id,
+            studentName: s.name,
+            timestamp: null,
+            status: "absent",
+            deviceHash: "N/A"
+          }));
+          
+        setPastRosterRecords([...checkedInRecords, ...absentRecords]);
       }
     } catch (err) {
       console.error("Failed to fetch past roster:", err);
@@ -681,10 +702,10 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans flex items-center justify-center">
-      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-6">
+      <div className={`w-full grid grid-cols-1 md:grid-cols-12 gap-6 transition-all duration-300 ${isHistoryExpanded ? "max-w-7xl" : "max-w-4xl"}`}>
         
         {/* Left Column: Course List */}
-        <div className="md:col-span-7 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+        <div className={`bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl space-y-6 transition-all duration-300 ${isHistoryExpanded ? "md:col-span-4" : "md:col-span-7"}`}>
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-xl font-extrabold text-white tracking-tight">{lecturer?.name || "Dr. Elizabeth Vance"}</h2>
@@ -802,10 +823,10 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
         </div>
 
         {/* Right Column: Session Setup */}
-        <div className="md:col-span-5 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col justify-between space-y-6">
+        <div className={`bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col justify-between space-y-6 transition-all duration-300 ${isHistoryExpanded ? "md:col-span-8" : "md:col-span-5"}`}>
           {selectedCourse ? (
             <>
-              <div className="space-y-5 flex-1 flex flex-col justify-between">
+              <div className={`space-y-5 flex-1 flex flex-col justify-between ${isHistoryExpanded ? "hidden" : ""}`}>
               <div className="space-y-4">
                 <div>
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-mono">Launching Session for</span>
@@ -952,7 +973,12 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
             <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 shadow-2xl flex flex-col space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-white tracking-tight">Past Session Audits</h3>
-                <span className="text-[10px] font-bold text-slate-500 font-mono uppercase tracking-wider">History Logs</span>
+                <button
+                  onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+                  className="px-2.5 py-1 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center space-x-1"
+                >
+                  <span>{isHistoryExpanded ? "Collapse View" : "Expand View"}</span>
+                </button>
               </div>
               
               {isPastSessionsLoading ? (
@@ -960,7 +986,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
               ) : pastSessions.length === 0 ? (
                 <div className="text-xs text-slate-550 text-center py-6">No past sessions found for this course.</div>
               ) : (
-                <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                <div className={`space-y-2.5 overflow-y-auto pr-1 transition-all ${isHistoryExpanded ? "max-h-96" : "max-h-56"}`}>
                   {pastSessions.map((ps) => (
                     <div 
                       key={ps.id}
@@ -977,10 +1003,10 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                       </div>
                       <div className="text-right">
                         <span className="text-xs font-bold text-indigo-400">
-                          {ps.total_checkins} Students
+                          {ps.total_checkins} Checked-in
                         </span>
                         <p className="text-[9px] text-slate-550 mt-0.5">
-                          {ps.present_count} Present / {ps.late_count} Late
+                          {ps.present_count} Present / {ps.late_count} Late / {ps.absent_count || 0} Absent
                         </p>
                       </div>
                     </div>
@@ -1057,16 +1083,20 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                         <td className="py-2.5 font-medium text-white">{r.studentName}</td>
                         <td className="py-2.5 font-mono text-slate-400">{r.studentId}</td>
                         <td className="py-2.5 font-mono text-slate-400">
-                          {new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {r.timestamp ? new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "—"}
                         </td>
-                        <td className="py-2.5 font-mono text-slate-500">{r.deviceHash.slice(0, 8)}...</td>
+                        <td className="py-2.5 font-mono text-slate-500">
+                          {r.deviceHash !== "N/A" ? `${r.deviceHash.slice(0, 8)}...` : "—"}
+                        </td>
                         <td className="py-2.5 text-right">
                           <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold ${
                             r.status === "present"
                               ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                              : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                              : r.status === "late"
+                              ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                              : "bg-rose-500/10 text-rose-450 border border-rose-500/20"
                           }`}>
-                            {r.status === "present" ? "Present" : "Late"}
+                            {r.status === "present" ? "Present" : r.status === "late" ? "Late" : "Absent"}
                           </span>
                         </td>
                       </tr>
@@ -1077,8 +1107,9 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
             )}
             
             <div className="border-t border-slate-850 pt-3 flex justify-between text-[10px] text-slate-500 font-medium">
-              <span>Total present: {selectedPastSession.present_count}</span>
-              <span>Total late: {selectedPastSession.late_count}</span>
+              <span>Present: {selectedPastSession.present_count}</span>
+              <span>Late: {selectedPastSession.late_count}</span>
+              <span>Absent: {selectedPastSession.absent_count}</span>
             </div>
           </div>
         </div>
