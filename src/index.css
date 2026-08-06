@@ -47,6 +47,8 @@
 
 /* Cards and Panels */
 .light .bg-slate-900,
+.light .bg-slate-900\/90,
+.light .bg-slate-900\/80,
 .light .bg-slate-900\/60,
 .light .bg-slate-900\/40,
 .light .bg-slate-950\/40,
@@ -75,6 +77,13 @@
 .light .text-slate-300,
 .light .text-slate-450 {
   color: #1e293b !important; /* slate-800 */
+}
+
+/* Warning text colors in light mode (e.g. Critical Risk rows) */
+.light .text-rose-100,
+.light .text-rose-200,
+.light .text-rose-300 {
+  color: #9f1239 !important; /* rose-800 - dark red */
 }
 
 .light .text-slate-400 {
@@ -286,6 +295,21 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, p, span, div {
 }
 .light .bg-slate-950.border-slate-800:hover,
 .light .bg-slate-950.border-slate-800:hover * {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Start Demo Simulation Button / Secondary Buttons in Light Mode */
+.light .bg-slate-800 {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+.light .bg-slate-800 * {
+  color: #1e293b !important;
+}
+.light .bg-slate-800:hover,
+.light .bg-slate-800:hover * {
   background-color: #f1f5f9 !important;
   color: #0f172a !important;
 }
