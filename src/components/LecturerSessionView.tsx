@@ -930,7 +930,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                         onChange={(e) => setRequireDoubleSigning(e.target.checked)}
                         className="sr-only peer"
                       />
-                      <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 peer-checked:after:bg-white"></div>
+                      <div className="switch-track w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 peer-checked:after:bg-white"></div>
                     </label>
                   </div>
 
@@ -979,7 +979,7 @@ const LecturerDashboard: React.FC<LecturerDashboardProps> = ({ onLaunchSession, 
                   onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
                   className="px-2.5 py-1 bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white rounded-lg text-[10px] font-bold transition-all cursor-pointer flex items-center space-x-1"
                 >
-                  <span>{isHistoryExpanded ? "Collapse View" : "Expand View"}</span>
+                  <span>{isHistoryExpanded ? "Exit Widescreen" : "Widescreen"}</span>
                 </button>
               </div>
               

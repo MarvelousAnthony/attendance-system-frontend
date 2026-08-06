@@ -331,3 +331,18 @@ body, button, input, select, textarea, h1, h2, h3, h4, h5, p, span, div {
 .light .theme-toggle-btn:hover * {
   color: #0f172a !important;
 }
+
+/* Enforce high-contrast text inside primary colored buttons in light mode */
+.light .bg-indigo-600,
+.light .bg-indigo-600 * {
+  color: #ffffff !important;
+}
+
+/* Premium Switch Track in Light Mode */
+.light .switch-track {
+  background-color: #cbd5e1 !important; /* light grey track when unchecked */
+  border-color: #cbd5e1 !important;
+}
+.light .peer:checked ~ .switch-track {
+  background-color: #4f46e5 !important; /* indigo-600 track when checked */
+}
